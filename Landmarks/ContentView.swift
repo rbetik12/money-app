@@ -1,6 +1,8 @@
 import SwiftUI
 
 struct MainScreenView: View {
+	@EnvironmentObject var moneyManager: MoneyManager
+	
 	var body: some View {
 		NavigationStack {
 			VStack(alignment: .leading) {
@@ -14,7 +16,7 @@ struct MainScreenView: View {
 									.foregroundColor(.white)
 									.padding()
 								
-								Text("1000 $")
+								Text(String(format: "%.1f", moneyManager.getBalance()) + "$")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
@@ -62,7 +64,7 @@ struct MainScreenView: View {
 						Text("Add expense")
 					}
 					
-					NavigationLink(destination: ExpenseView()) {
+					NavigationLink(destination: IncomeView()) {
 						Text("Add income")
 					}
 					Spacer()

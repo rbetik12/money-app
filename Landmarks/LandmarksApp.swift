@@ -12,6 +12,8 @@ struct LandmarksApp: App {
     var body: some Scene {
         WindowGroup {
 			MainScreenView()
+				.environmentObject(MoneyManager())
+				.environmentObject(CategoryManager())
         }
     }
 }

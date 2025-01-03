@@ -14,8 +14,8 @@ struct ExpenseView: View {
 	@State private var selectedCurrency: Currency = .rsd
 	@State private var shouldNavigate: Bool = false
 	
-	@StateObject private var categoryManager = CategoryManager()
-	@StateObject private var moneyManager = MoneyManager()
+	@EnvironmentObject var categoryManager: CategoryManager
+	@EnvironmentObject var moneyManager: MoneyManager
 	
 	var body: some View {
 		NavigationStack {
