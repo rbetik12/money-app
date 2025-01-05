@@ -21,8 +21,41 @@ struct CategoryOperation: Identifiable {
 	let percentage: Double // Add percentage property
 }
 
+struct ExpenseRow: View {
+	var iconName: String
+	var category: String
+	var transactions: Int
+	var amount: Double
+	
+	var body: some View {
+		HStack {
+			ZStack {
+				Circle()
+					.frame(width: 40, height: 40)
+					.foregroundColor(Color.purple.opacity(0.8))
+				Image(systemName: iconName)
+					.foregroundColor(.white)
+					.font(.headline)
+			}
+			VStack(alignment: .leading) {
+				Text(category)
+					.font(.headline)
+					.foregroundColor(.gray)
+				Text("\(transactions) transactions")
+					.font(.subheadline)
+					.foregroundColor(.gray)
+			}
+			Spacer()
+			Text(String(format: "-%.1f$", amount))
+				.font(.headline)
+				.foregroundColor(.gray)
+		}
+	}
+}
+
 struct StatsView: View {
-	@EnvironmentObject var moneyManager: MockMoneyManager
+	@EnvironmentObject var moneyManager: MoneyManager
+	@EnvironmentObject var categoryManager: CategoryManager
 	
 	var body: some View {
 		VStack {
@@ -30,7 +63,7 @@ struct StatsView: View {
 				let total = moneyManager.getOperationsSumByCategory(isExpense: true).values.reduce(0, +)
 				let percentage = (revenue / total) * 100
 				return CategoryOperation(id: category.id, title: category.name, revenue: revenue, percentage: percentage)
-			}) { product in
+			} as [CategoryOperation]) { product in
 				SectorMark(
 					angle: .value(
 						Text(verbatim: product.title),
@@ -46,18 +79,33 @@ struct StatsView: View {
 					)
 				)
 				.annotation(position: .overlay) { // Add annotation to display percentage
-					Text(String(format: "%.1f%%", product.percentage))
-						.font(.caption)
-						.foregroundColor(.white)
 					VStack {
-						Text(String(format: "%.1f%%", product.percentage)) // Percentage
+						Text(product.title) // Percentage
 							.font(.caption2)
 							.foregroundColor(.white.opacity(0.8))
+						Text(String(format: "%.1f%%", product.percentage))
+							.font(.caption)
+							.foregroundColor(.white)
 					}
 				}
 			}
 			.frame(width: 300, height: 300)
+			.chartLegend(.hidden)
 			
+			VStack {
+				Text("Expenses")
+				Divider()
+					.background(Color.purple)
+					.frame(height: 2)
+					.padding(.horizontal, 20)
+				
+				List {
+					ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: true)), id:\.key.id) { category, revenue in
+						ExpenseRow(iconName: category.imageName, category: category.name, transactions: moneyManager.getOperationsByCategory(category: category, isExpense: true).count, amount: revenue)
+					}
+				}
+				.listStyle(PlainListStyle())
+			}
 			Spacer()
 		}
 	}
@@ -65,5 +113,6 @@ struct StatsView: View {
 
 #Preview {
 	StatsView()
-		.environmentObject(MockMoneyManager())
+		.environmentObject(MockMoneyManager() as MoneyManager)
+		.environmentObject(CategoryManager())
 }
