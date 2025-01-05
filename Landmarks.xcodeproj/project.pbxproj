@@ -9,6 +9,7 @@
 /* Begin PBXBuildFile section */
 		230755FB2D1B714700CBCA07 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230755FA2D1B714700CBCA07 /* Category.swift */; };
 		230755FD2D1B74A400CBCA07 /* MoneyOperation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230755FC2D1B74A400CBCA07 /* MoneyOperation.swift */; };
+		2313D8482D29F12100517233 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2313D8472D29F12100517233 /* StatsView.swift */; };
 		2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2BF2D18B86B002AEFE7 /* LandmarksApp.swift */; };
 		2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2C12D18B86B002AEFE7 /* ContentView.swift */; };
 		2315C2C42D18B86C002AEFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2315C2C32D18B86C002AEFE7 /* Assets.xcassets */; };
@@ -22,6 +23,7 @@
 /* Begin PBXFileReference section */
 		230755FA2D1B714700CBCA07 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
 		230755FC2D1B74A400CBCA07 /* MoneyOperation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperation.swift; sourceTree = "<group>"; };
+		2313D8472D29F12100517233 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		2315C2BC2D18B86B002AEFE7 /* Landmarks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Landmarks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2315C2BF2D18B86B002AEFE7 /* LandmarksApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandmarksApp.swift; sourceTree = "<group>"; };
 		2315C2C12D18B86B002AEFE7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -73,6 +75,7 @@
 				23985FDC2D1A27FC002945CB /* IncomeView.swift */,
 				230755FA2D1B714700CBCA07 /* Category.swift */,
 				230755FC2D1B74A400CBCA07 /* MoneyOperation.swift */,
+				2313D8472D29F12100517233 /* StatsView.swift */,
 			);
 			path = Landmarks;
 			sourceTree = "<group>";
@@ -163,6 +166,7 @@
 				23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */,
 				2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */,
 				23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */,
+				2313D8482D29F12100517233 /* StatsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

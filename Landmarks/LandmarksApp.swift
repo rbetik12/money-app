@@ -11,9 +11,19 @@ import SwiftUI
 struct LandmarksApp: App {
     var body: some Scene {
         WindowGroup {
-			MainScreenView()
-				.environmentObject(MoneyManager())
-				.environmentObject(CategoryManager())
+			TabView {
+				MainScreenView()
+					.environmentObject(MoneyManager())
+					.environmentObject(CategoryManager())
+					.tabItem {
+						Image(systemName: "dollarsign.circle")
+					}
+				
+//				StatsView()
+//					.tabItem {
+//						Image(systemName: "chart.pie")
+//					}
+			}
         }
     }
 }
