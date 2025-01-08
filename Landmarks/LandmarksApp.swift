@@ -9,10 +9,13 @@ import SwiftUI
 
 @main
 struct LandmarksApp: App {
-    var body: some Scene {
-        WindowGroup {
+	@Environment(\.scenePhase) private var scenePhase
+	private var moneyStorage = MoneyManagerStorage()
+	
+	var body: some Scene {
+		WindowGroup {
 			TabView {
-				let moneyManager = MoneyManager()
+				let moneyManager = MoneyManager(storage: moneyStorage)
 				let categoryManager = CategoryManager()
 				
 				MainScreenView()
@@ -29,6 +32,26 @@ struct LandmarksApp: App {
 						Image(systemName: "chart.pie")
 					}
 			}
-        }
-    }
+		}
+		.onChange(of: scenePhase) { oldState, newScenePhase in
+			switch newScenePhase {
+			case .inactive:
+				Task {
+					do {
+						try await moneyStorage.save()
+					} catch {
+						fatalError(error.localizedDescription)
+					}
+				}
+			case .active:
+				// Optionally handle becoming active again
+				print("App is active")
+			case .background:
+				// Optionally handle moving to background
+				print("App is in background")
+			@unknown default:
+				break
+			}
+		}
+	}
 }

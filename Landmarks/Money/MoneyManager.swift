@@ -8,9 +8,11 @@
 import Foundation
 
 class MoneyManager: ObservableObject {
-	@Published var expenses: [MoneyOperation] = []
-	@Published var incomes: [MoneyOperation] = []
-	@Published var balance: Double = 0.0
+	var storage: MoneyManagerStorage
+	
+	init(storage: MoneyManagerStorage) {
+		self.storage = storage
+	}
 
 	func addExpense(description: String, 
 					category: Category,
@@ -18,8 +20,8 @@ class MoneyManager: ObservableObject {
 					amount: Double,
 					date: Date = Date()) {
 		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
-		expenses.append(expense)
-		balance -= amount
+		storage.moneyData.expenses.append(expense)
+		storage.moneyData.balance -= amount
 	}
 	
 	func addIncome(description: String,
@@ -28,40 +30,40 @@ class MoneyManager: ObservableObject {
 					amount: Double,
 					date: Date = Date()) {
 		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
-		incomes.append(income)
-		balance += amount
+		storage.moneyData.incomes.append(income)
+		storage.moneyData.balance += amount
 	}
 
 	func getAllExpenses() -> [MoneyOperation] {
-		return expenses
+		return storage.moneyData.expenses
 	}
 	
 	func getBalance() -> Double {
-		return balance
+		return storage.moneyData.balance
 	}
 	
 	func getOperationsByCategory(category: Category, isExpense: Bool = true) -> [MoneyOperation] {
 		if (isExpense) {
-			return expenses.filter {$0.category == category}
+			return storage.moneyData.expenses.filter {$0.category == category}
 		}
-		return incomes.filter {$0.category == category}
+		return storage.moneyData.incomes.filter {$0.category == category}
 	}
 	
 	func getOperationsSumByCategory(isExpense: Bool = true) -> [Category: Double] {
 		if (isExpense) {
-			return expenses.reduce(into: [Category: Double]()) { result, operation in
+			return storage.moneyData.expenses.reduce(into: [Category: Double]()) { result, operation in
 				result[operation.category, default: 0] += operation.amount
 			}
 		}
-		return incomes.reduce(into: [Category: Double]()) { result, operation in
+		return storage.moneyData.incomes.reduce(into: [Category: Double]()) { result, operation in
 			result[operation.category, default: 0] += operation.amount
 		}
 	}
 }
 
 class MockMoneyManager : MoneyManager {
-	override init() {
-		super.init()
+	override init(storage: MoneyManagerStorage) {
+		super.init(storage: storage)
 		let categoryManager = CategoryManager()
 		
 		addExpense(description: "Test", category: categoryManager.getCategoryByName(name: "Food"), currency: .rsd, amount: 100)

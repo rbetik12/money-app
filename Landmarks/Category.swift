@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct Category : Identifiable, Equatable, Hashable {
+struct Category : Identifiable, Equatable, Hashable, Codable {
 	init() {
 		id = UUID()
 		name = ""

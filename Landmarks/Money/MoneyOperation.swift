@@ -7,7 +7,7 @@
 
 import Foundation
 
-struct MoneyOperation: Identifiable {
+struct MoneyOperation: Identifiable, Codable {
 	let id: UUID
 	let date: Date
 	let category: Category

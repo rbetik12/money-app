@@ -108,8 +108,10 @@ let tabItems = ["pencil", "list.bullet", "chart.bar", "person.fill"]
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
+		let moneyManagerStorage = MoneyManagerStorage()
+		
 		MainScreenView()
-			.environmentObject(MoneyManager())
+			.environmentObject(MoneyManager(storage: moneyManagerStorage))
 	}
 }
 

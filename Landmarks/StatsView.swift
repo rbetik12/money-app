@@ -112,7 +112,11 @@ struct StatsView: View {
 }
 
 #Preview {
-	StatsView()
-		.environmentObject(MockMoneyManager() as MoneyManager)
-		.environmentObject(CategoryManager())
+	ZStack {
+		let moneyManagerStorage = MoneyManagerStorage()
+		
+		StatsView()
+			.environmentObject(MockMoneyManager(storage: moneyManagerStorage) as MoneyManager)
+			.environmentObject(CategoryManager())
+	}
 }
