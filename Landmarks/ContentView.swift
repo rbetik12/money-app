@@ -5,8 +5,8 @@ struct MainScreenView: View {
 	
 	var body: some View {
 		NavigationStack {
-			VStack(alignment: .leading) {
-				HStack(alignment: .center) {
+			VStack(alignment: .center) {
+				VStack(alignment: .center) {
 					RoundedRectangle(cornerRadius: 25.0)
 						.fill(Color.red)
 						.overlay {
@@ -27,46 +27,36 @@ struct MainScreenView: View {
 						.fill(Color.red)
 						.overlay {
 							VStack {
-								Text("+1000$")
+								Text("Income")
+									.font(.title3)
+									.foregroundColor(.white)
+								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + "$")
 									.font(.largeTitle)
 									.foregroundColor(.white)
-									.padding()
 								
-								Text("-500$")
+								Text("Expenses")
+									.font(.title3)
+									.foregroundColor(.white)
+								Text(String(format: "-%.1f", moneyManager.getExpenseAmount()) + "$")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
 						}
-						.frame(height: 150)
 				}
 				
-				RoundedRectangle(cornerRadius: 25.0)
-					.fill(Color.red)
-					.overlay {
-						VStack {
-							Text("Cash flow")
-								.font(.title3)
-								.foregroundColor(.white)
-								.padding()
-							
-							Text("+500 $")
-								.font(.largeTitle)
-								.foregroundColor(.white)
-						}
-					}
-					.frame(height: 150)
-				
-				
-				HStack {
-					Spacer()
+				VStack {
 					
 					NavigationLink(destination: ExpenseView()) {
 						Text("Add expense")
 					}
+					.buttonStyle(BorderedButtonStyle())
+					.padding()
 					
 					NavigationLink(destination: IncomeView()) {
 						Text("Add income")
 					}
+					.buttonStyle(BorderedButtonStyle())
+					.padding()
 					Spacer()
 				}
 				.padding()
@@ -87,31 +77,12 @@ struct MainScreenView: View {
 	}
 }
 
-// Data Models
-struct Transaction: Identifiable {
-	let id = UUID()
-	let icon: String
-	let category: String
-	let amount: String
-	let color: Color
-}
-
-// Sample Transactions
-let transactions = [
-	Transaction(icon: "cart.fill", category: "Shopping", amount: "-$450.50", color: .purple),
-	Transaction(icon: "car.fill", category: "Transportation", amount: "-$50.00", color: .blue),
-	Transaction(icon: "cup.and.saucer.fill", category: "Food & Drinks", amount: "-$20.00", color: .orange)
-]
-
-// Tab Items
-let tabItems = ["pencil", "list.bullet", "chart.bar", "person.fill"]
-
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
+#Preview {
+	ZStack {
 		let moneyManagerStorage = MoneyManagerStorage()
 		
 		MainScreenView()
 			.environmentObject(MoneyManager(storage: moneyManagerStorage))
+			.environmentObject(CategoryManager())
 	}
 }
-

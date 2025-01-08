@@ -38,6 +38,22 @@ class MoneyManager: ObservableObject {
 		return storage.moneyData.expenses
 	}
 	
+	func getAllIncomes() -> [MoneyOperation] {
+		return storage.moneyData.incomes
+	}
+	
+	func getIncomeAmount() -> Double {
+		return storage.moneyData.incomes.reduce(0) { (result, item) in
+			result + item.amount
+		}
+	}
+	
+	func getExpenseAmount() -> Double {
+		return storage.moneyData.expenses.reduce(0) { (result, item) in
+			result + item.amount
+		}
+	}
+	
 	func getBalance() -> Double {
 		return storage.moneyData.balance
 	}
