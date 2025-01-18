@@ -1,7 +1,7 @@
 const { DataTypes, Model } = require('sequelize');
-const { sequelize } = require('../config/database');
+const { sequelize } = require('../../config/database');
 
-const User = sequelize.define(
+const UserDb = sequelize.define(
   'User',
   {
     id: {
@@ -26,6 +26,6 @@ const User = sequelize.define(
 );
 
 // the defined model is the class itself
-console.log(User === sequelize.models.User); // true
+console.log(UserDb === sequelize.models.UserDb); // true
 
-module.exports = User;
+module.exports = UserDb;
