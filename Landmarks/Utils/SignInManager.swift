@@ -39,10 +39,7 @@ class SignInManager : ObservableObject {
 			}
 			
 			guard let user = user else { return }
-			let accessToken = user.user.accessToken.tokenString
-			let idToken = user.user.idToken!.tokenString
-			
-			self.verifyGoogleToken(idToken: idToken, refreshToken: user.user.refreshToken.tokenString)
+			self.verifyGoogleToken(idToken: user.user.idToken!.tokenString, refreshToken: user.user.refreshToken.tokenString)
 		}
 	}
 	

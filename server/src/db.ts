@@ -1,0 +1,38 @@
+import { sequelize } from './config/database';
+import User from './models/user'
+
+export async function updateOrCreateUserOnGoogleSignIn(id: String, refreshToken: String): Promise<User | null> {
+    const user: User = await User.findOne({
+        where: {
+            google_id: id
+        }
+    });
+
+    if (user !== null) {
+        const [affectedRows] = await User.update(
+            { google_refresh_token: refreshToken },
+            {
+                where: { id: user.id },
+            }
+        );
+
+        if (affectedRows === 0) {
+            console.log('No user found to update.');
+            return null;
+        }
+
+        return await User.findOne({
+            where: { id: user.id },
+        });
+    }
+    else {
+        const newUser = await User.create({
+            google_id: id,
+            google_refresh_token: refreshToken
+        });
+
+        return newUser;
+    }
+
+    return null;
+}

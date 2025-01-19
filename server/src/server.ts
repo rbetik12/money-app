@@ -1,38 +1,14 @@
 import express, { Express, Request, Response } from "express";
-const { DataTypes, Model } = require('sequelize');
 import dotenv from "dotenv";
 const {OAuth2Client} = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 import { sequelize } from './config/database';
-import UserDb from './models/db/user';
-import MoneyOperationDb from './models/db/money-operations';
+import { updateOrCreateUserOnGoogleSignIn } from "./db";
 
 dotenv.config();
 const app: Express = express();
 app.use(express.json())
 const port = process.env.PORT || 3000;
-
-const writeUser = async () => {
-    try {
-        // Create a new user
-        const newUser = await UserDb.create({
-            email: 'testuser@example.com',
-        });
-
-        console.log('User created:', newUser.toJSON());
-    } catch (error) {
-        console.error('Error creating user:', error);
-    }
-}
-
-const readUser = async () => {
-    try {
-        const users = await UserDb.findAll();
-        console.log('All users:', users.map(user => user.toJSON()));
-    } catch (error) {
-        console.error('Error fetching users:', error);
-    }
-}
 
 app.post('/v1/auth/google/signin', async (req: any, res: any) => {
     const { idToken, refreshToken } = req.body;
@@ -56,15 +32,14 @@ app.post('/v1/auth/google/signin', async (req: any, res: any) => {
 
         console.log(`User info payload: ${JSON.stringify(payload)}`);
 
-        res.json({
-            message: 'Token is valid',
-            user: {
-                id: payload.sub,
-                email: payload.email,
-                name: payload.name,
-                picture: payload.picture,
-            },
-        });
+        const user = await updateOrCreateUserOnGoogleSignIn(payload.sub, refreshToken);
+        if (user === null) {
+            console.error('User retrivieng error');
+            return res.status(400).json({ error: 'User retrivieng error' });
+        }
+        const token = jwt.sign(JSON.stringify(user), process.env.JWT_SECRET!);
+
+        res.send(token);
     } catch (err) {
         console.error('Token validation error:', err);
         res.status(403).json({ error: 'Invalid or expired token' });
@@ -74,11 +49,5 @@ app.post('/v1/auth/google/signin', async (req: any, res: any) => {
 app.listen(port, async () => {
     console.log(`[server]: Server is running at http://localhost:${port}`);
 
-    await UserDb.sync({ force: true });
-    await MoneyOperationDb.sync({ force: true });
-    await sequelize.sync({ force: true });
-    console.log('[server]: All models were synchronized successfully.');
-
-    await writeUser();
-    readUser();
+    await sequelize.sync({ force: false });
 });
