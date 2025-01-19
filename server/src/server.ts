@@ -3,12 +3,31 @@ import dotenv from "dotenv";
 const {OAuth2Client} = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 import { sequelize } from './config/database';
-import { updateOrCreateUserOnGoogleSignIn } from "./db";
+import { deleteUserCredentails, updateOrCreateUserOnGoogleSignIn } from "./db";
+import { deserializeToken } from "./utils";
 
 dotenv.config();
 const app: Express = express();
 app.use(express.json())
 const port = process.env.PORT || 3000;
+
+app.post('/v1/auth/signout', async (req: any, res: any) => {
+    const { token } = req.body;
+    if (!token) {
+        return res.status(400).json({ error: 'Token is missing' });
+    }
+
+    let payload = deserializeToken(token);
+    if (!payload) {
+        return res.status(400).json({ error: 'Invalid token' });
+    }
+
+    if (!deleteUserCredentails(payload)) {
+        return res.status(400).json({ error: 'User was not found' });
+    }
+
+    return res.status(200)
+});
 
 app.post('/v1/auth/google/signin', async (req: any, res: any) => {
     const { idToken, refreshToken } = req.body;

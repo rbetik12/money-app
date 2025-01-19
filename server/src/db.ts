@@ -36,3 +36,21 @@ export async function updateOrCreateUserOnGoogleSignIn(id: String, refreshToken:
 
     return null;
 }
+
+export async function deleteUserCredentails(user: User): Promise<boolean> {
+    const [affectedRows] = await User.update(
+        {
+            google_refresh_token: null
+        },
+        {
+            where: { id: user.id },
+        }
+    );
+
+    if (affectedRows === 0) {
+        console.error('No user found to update credentials.');
+        return false;
+    }
+
+    return true;
+}

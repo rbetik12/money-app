@@ -14,6 +14,7 @@
 		230AE6F22D3BDA6F005336E0 /* SignInManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F12D3BDA6F005336E0 /* SignInManager.swift */; };
 		230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F32D3BDB60005336E0 /* KeychainManager.swift */; };
 		230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F52D3BDBE2005336E0 /* URLStorage.swift */; };
+		230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F72D3DBEEB005336E0 /* BundleFix.swift */; };
 		2313D8482D29F12100517233 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2313D8472D29F12100517233 /* StatsView.swift */; };
 		2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2313D84A2D2F2F0600517233 /* MoneyManagerStorage.swift */; };
 		2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2BF2D18B86B002AEFE7 /* LandmarksApp.swift */; };
@@ -33,6 +34,7 @@
 		230AE6F12D3BDA6F005336E0 /* SignInManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInManager.swift; sourceTree = "<group>"; };
 		230AE6F32D3BDB60005336E0 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		230AE6F52D3BDBE2005336E0 /* URLStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLStorage.swift; sourceTree = "<group>"; };
+		230AE6F72D3DBEEB005336E0 /* BundleFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleFix.swift; sourceTree = "<group>"; };
 		2313D8472D29F12100517233 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		2313D84A2D2F2F0600517233 /* MoneyManagerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerStorage.swift; sourceTree = "<group>"; };
 		2315C2BC2D18B86B002AEFE7 /* Landmarks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Landmarks.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -65,6 +67,7 @@
 				230AE6F12D3BDA6F005336E0 /* SignInManager.swift */,
 				230AE6F32D3BDB60005336E0 /* KeychainManager.swift */,
 				230AE6F52D3BDBE2005336E0 /* URLStorage.swift */,
+				230AE6F72D3DBEEB005336E0 /* BundleFix.swift */,
 			);
 			path = Utils;
 			sourceTree = "<group>";
@@ -206,6 +209,7 @@
 				230AE6F22D3BDA6F005336E0 /* SignInManager.swift in Sources */,
 				239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */,
 				2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */,
+				230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */,
 				239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */,
 				230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */,
 				23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */,

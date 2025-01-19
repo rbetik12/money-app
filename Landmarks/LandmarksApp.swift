@@ -17,11 +17,12 @@ struct LandmarksApp: App {
 			TabView {
 				let moneyManager = MoneyManager(storage: moneyStorage)
 				let categoryManager = CategoryManager()
+				let signInManager = SignInManager()
 				
 				MainScreenView()
 					.environmentObject(moneyManager)
 					.environmentObject(categoryManager)
-					.environmentObject(SignInManager())
+					.environmentObject(signInManager)
 					.tabItem {
 						Image(systemName: "dollarsign.circle")
 					}

@@ -9,11 +9,7 @@ import Foundation
 import GoogleSignIn
 
 class SignInManager : ObservableObject {
-	let TOKEN_KEYCHAIN_KEY = "jwtToken"
-	
-	func isSignedIn() -> Bool {
-		return getToken() != ""
-	}
+	private let TOKEN_KEYCHAIN_KEY = "jwtToken"
 	
 	func getToken() -> String {
 		if let data = KeychainManager.instance.read(forKey: TOKEN_KEYCHAIN_KEY),
@@ -23,7 +19,7 @@ class SignInManager : ObservableObject {
 		return ""
 	}
 	
-	func googleSignIn() {
+	func googleSignIn(onSuccess: @escaping () -> Void) {
 		guard let clientID = Bundle.main.object(forInfoDictionaryKey: "GIDClientID") as? String else {
 			print("Client ID not found")
 			return
@@ -39,16 +35,39 @@ class SignInManager : ObservableObject {
 			}
 			
 			guard let user = user else { return }
-			self.verifyGoogleToken(idToken: user.user.idToken!.tokenString, refreshToken: user.user.refreshToken.tokenString)
+			self.verifyGoogleToken(idToken: user.user.idToken!.tokenString, 
+								   refreshToken: user.user.refreshToken.tokenString,
+								   onSuccess: onSuccess)
 		}
 	}
 	
 	func signOut() {
 		GIDSignIn.sharedInstance.signOut()
+		signOutInternal()
 		KeychainManager.instance.delete(forKey: TOKEN_KEYCHAIN_KEY)
 	}
 	
-	private func verifyGoogleToken(idToken: String, refreshToken: String) {
+	private func signOutInternal() {
+		let token = getToken()
+		if (token.isEmpty) {
+			return
+		}
+		
+		let url = URL(string: "\(URLStorage.getBackendHost())/v1/auth/signout")!
+		var request = URLRequest(url: url)
+		request.httpMethod = "POST"
+		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.httpBody = try? JSONEncoder().encode(["token": token])
+		
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error = error {
+				print("Error signing out: \(error)")
+				return
+			}
+		}.resume()
+	}
+	
+	private func verifyGoogleToken(idToken: String, refreshToken: String, onSuccess: @escaping () -> Void) {
 		let url = URL(string: "\(URLStorage.getBackendHost())/v1/auth/google/signin")!
 		
 		var request = URLRequest(url: url)
@@ -64,7 +83,8 @@ class SignInManager : ObservableObject {
 			
 			if let data = data {
 				let token = String(data: data, encoding: .utf8)!
-				print("Response: \(token)")
+				self.setToken(token: token)
+				onSuccess()
 			}
 		}.resume()
 	}

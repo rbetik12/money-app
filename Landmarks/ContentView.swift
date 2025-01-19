@@ -6,7 +6,7 @@ struct MainScreenView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var signInManager: SignInManager
 	
-	var userId: UUID = UUID(uuid: UUID_NULL);
+	@State var isSignedIn = false
 	
 	var body: some View {
 		NavigationStack {
@@ -66,6 +66,23 @@ struct MainScreenView: View {
 				}
 				.padding()
 				
+				if (isSignedIn) {
+					Button(action: {
+						isSignedIn = false
+						signInManager.signOut()
+					}) {
+						Text("Sign out")
+					}
+				} else {
+					GoogleSignInButton(action: {
+						signInManager.googleSignIn(onSuccess: {
+							isSignedIn = true
+						})
+					})
+					.frame(maxWidth: .infinity, minHeight: 100)
+					.padding()
+				}
+				
 				Spacer()
 			}
 			.toolbar {
@@ -78,14 +95,6 @@ struct MainScreenView: View {
 			.navigationTitle("Money App")
 			.navigationBarHidden(true)
 			.padding()
-			
-			if (signInManager.isSignedIn()) {
-				Button(action: signInManager.signOut) {
-					Text("Sign out")
-				}
-			} else {
-				GoogleSignInButton(action: signInManager.googleSignIn)
-			}
 		}
 		.onOpenURL { url in
 			GIDSignIn.sharedInstance.handle(url)
@@ -94,6 +103,8 @@ struct MainScreenView: View {
 			GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
 				if (user == nil) {
 					signInManager.signOut()
+				} else {
+					isSignedIn = true
 				}
 			}
 		}
