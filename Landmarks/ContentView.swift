@@ -1,7 +1,12 @@
 import SwiftUI
+import GoogleSignIn
+import GoogleSignInSwift
 
 struct MainScreenView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
+	@EnvironmentObject var signInManager: SignInManager
+	
+	var userId: UUID = UUID(uuid: UUID_NULL);
 	
 	var body: some View {
 		NavigationStack {
@@ -73,6 +78,24 @@ struct MainScreenView: View {
 			.navigationTitle("Money App")
 			.navigationBarHidden(true)
 			.padding()
+			
+			if (signInManager.isSignedIn()) {
+				Button(action: signInManager.signOut) {
+					Text("Sign out")
+				}
+			} else {
+				GoogleSignInButton(action: signInManager.googleSignIn)
+			}
+		}
+		.onOpenURL { url in
+			GIDSignIn.sharedInstance.handle(url)
+		}
+		.onAppear {
+			GIDSignIn.sharedInstance.restorePreviousSignIn { user, error in
+				if (user == nil) {
+					signInManager.signOut()
+				}
+			}
 		}
 	}
 }
@@ -84,5 +107,6 @@ struct MainScreenView: View {
 		MainScreenView()
 			.environmentObject(MoneyManager(storage: moneyManagerStorage))
 			.environmentObject(CategoryManager())
+			.environmentObject(SignInManager())
 	}
 }

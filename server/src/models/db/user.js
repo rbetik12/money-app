@@ -18,6 +18,16 @@ const UserDb = sequelize.define(
         isEmail: true, // Validates email format
       },
     },
+    google_id: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    },
+    google_refresh_token: {
+      type: DataTypes.STRING,
+      allowNull: true,
+      unique: true,
+    }
   },
   {
     tableName: 'users', // Name of the table

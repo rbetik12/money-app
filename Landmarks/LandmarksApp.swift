@@ -21,6 +21,7 @@ struct LandmarksApp: App {
 				MainScreenView()
 					.environmentObject(moneyManager)
 					.environmentObject(categoryManager)
+					.environmentObject(SignInManager())
 					.tabItem {
 						Image(systemName: "dollarsign.circle")
 					}
