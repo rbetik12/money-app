@@ -15,12 +15,14 @@
 		230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F32D3BDB60005336E0 /* KeychainManager.swift */; };
 		230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F52D3BDBE2005336E0 /* URLStorage.swift */; };
 		230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6F72D3DBEEB005336E0 /* BundleFix.swift */; };
+		230AE6FB2D3DCB9B005336E0 /* MainAppView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */; };
 		2313D8482D29F12100517233 /* StatsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2313D8472D29F12100517233 /* StatsView.swift */; };
 		2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2313D84A2D2F2F0600517233 /* MoneyManagerStorage.swift */; };
 		2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2BF2D18B86B002AEFE7 /* LandmarksApp.swift */; };
 		2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2C12D18B86B002AEFE7 /* ContentView.swift */; };
 		2315C2C42D18B86C002AEFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2315C2C32D18B86C002AEFE7 /* Assets.xcassets */; };
 		2315C2C72D18B86C002AEFE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2315C2C62D18B86C002AEFE7 /* Preview Assets.xcassets */; };
+		238DA1BB2D3F1F3F007BF580 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238DA1BA2D3F1F3F007BF580 /* Color+Hex.swift */; };
 		239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C72D1E0A7800B2C616 /* MoneyManager.swift */; };
 		239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C92D1E0AED00B2C616 /* Currency.swift */; };
 		23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDA2D1A26F4002945CB /* ExpenseView.swift */; };
@@ -35,6 +37,7 @@
 		230AE6F32D3BDB60005336E0 /* KeychainManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeychainManager.swift; sourceTree = "<group>"; };
 		230AE6F52D3BDBE2005336E0 /* URLStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLStorage.swift; sourceTree = "<group>"; };
 		230AE6F72D3DBEEB005336E0 /* BundleFix.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BundleFix.swift; sourceTree = "<group>"; };
+		230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainAppView.swift; sourceTree = "<group>"; };
 		2313D8472D29F12100517233 /* StatsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatsView.swift; sourceTree = "<group>"; };
 		2313D84A2D2F2F0600517233 /* MoneyManagerStorage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManagerStorage.swift; sourceTree = "<group>"; };
 		2315C2BC2D18B86B002AEFE7 /* Landmarks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Landmarks.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -42,6 +45,7 @@
 		2315C2C12D18B86B002AEFE7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2315C2C32D18B86C002AEFE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2315C2C62D18B86C002AEFE7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		238DA1BA2D3F1F3F007BF580 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		239436C72D1E0A7800B2C616 /* MoneyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManager.swift; sourceTree = "<group>"; };
 		239436C92D1E0AED00B2C616 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		23985FDA2D1A26F4002945CB /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
@@ -68,8 +72,17 @@
 				230AE6F32D3BDB60005336E0 /* KeychainManager.swift */,
 				230AE6F52D3BDBE2005336E0 /* URLStorage.swift */,
 				230AE6F72D3DBEEB005336E0 /* BundleFix.swift */,
+				238DA1BA2D3F1F3F007BF580 /* Color+Hex.swift */,
 			);
 			path = Utils;
+			sourceTree = "<group>";
+		};
+		230AE6F92D3DCB8D005336E0 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */,
+			);
+			path = Views;
 			sourceTree = "<group>";
 		};
 		2313D8492D2F2EBF00517233 /* Money */ = {
@@ -101,6 +114,7 @@
 		2315C2BE2D18B86B002AEFE7 /* Landmarks */ = {
 			isa = PBXGroup;
 			children = (
+				230AE6F92D3DCB8D005336E0 /* Views */,
 				230AE6F02D3BDA5B005336E0 /* Utils */,
 				230AE6EF2D3BC967005336E0 /* Info.plist */,
 				2313D8492D2F2EBF00517233 /* Money */,
@@ -203,6 +217,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				230755FD2D1B74A400CBCA07 /* MoneyOperation.swift in Sources */,
+				230AE6FB2D3DCB9B005336E0 /* MainAppView.swift in Sources */,
 				230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */,
 				2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */,
 				230755FB2D1B714700CBCA07 /* Category.swift in Sources */,
@@ -210,6 +225,7 @@
 				239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */,
 				2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */,
 				230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */,
+				238DA1BB2D3F1F3F007BF580 /* Color+Hex.swift in Sources */,
 				239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */,
 				230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */,
 				23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */,
@@ -360,6 +376,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -396,6 +414,8 @@
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
 				INFOPLIST_KEY_UIStatusBarStyle = UIStatusBarStyleLightContent;
 				INFOPLIST_KEY_UISupportedInterfaceOrientations = UIInterfaceOrientationPortrait;
+				INFOPLIST_KEY_UIUserInterfaceStyle = Light;
+				IPHONEOS_DEPLOYMENT_TARGET = 16.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",

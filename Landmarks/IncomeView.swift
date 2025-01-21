@@ -23,7 +23,7 @@ struct IncomeView: View {
 				HStack {
 					TextField("Income", text: $incomeText)
 						.keyboardType(.numberPad)
-						.onChange(of: incomeText) { oldState, newValue in
+						.onChange(of: incomeText) { newValue in
 							incomeText = newValue.filter { $0.isNumber }
 							income = Int(incomeText) ?? 0
 						}

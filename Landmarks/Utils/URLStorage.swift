@@ -14,7 +14,11 @@ class URLStorage {
 	}
 	
 	private static func getTestBackendHost() -> String {
+#if targetEnvironment(simulator)
 		return "http://localhost:3000"
+#else
+		return "http://192.168.0.16:3000"
+#endif
 	}
 	
 	private static func getProdBackendHost() -> String {

@@ -10,37 +10,24 @@ import SwiftUI
 @main
 struct LandmarksApp: App {
 	@Environment(\.scenePhase) private var scenePhase
-	private var moneyStorage = MoneyManagerStorage()
+	
+	private let moneyManager = MoneyManager(storage: MoneyManagerStorage())
+	private let categoryManager = CategoryManager()
+	private let signInManager = SignInManager()
 	
 	var body: some Scene {
 		WindowGroup {
-			TabView {
-				let moneyManager = MoneyManager(storage: moneyStorage)
-				let categoryManager = CategoryManager()
-				let signInManager = SignInManager()
-				
-				MainScreenView()
-					.environmentObject(moneyManager)
-					.environmentObject(categoryManager)
-					.environmentObject(signInManager)
-					.tabItem {
-						Image(systemName: "dollarsign.circle")
-					}
-				
-				StatsView()
-					.environmentObject(moneyManager)
-					.environmentObject(categoryManager)
-					.tabItem {
-						Image(systemName: "chart.pie")
-					}
-			}
+			MainAppView()
+				.environmentObject(moneyManager)
+				.environmentObject(categoryManager)
+				.environmentObject(signInManager)
 		}
-		.onChange(of: scenePhase) { oldState, newScenePhase in
+		.onChange(of: scenePhase) { newScenePhase in
 			switch newScenePhase {
 			case .inactive:
 				Task {
 					do {
-						try await moneyStorage.save()
+						try await moneyManager.storage.save()
 					} catch {
 						fatalError(error.localizedDescription)
 					}

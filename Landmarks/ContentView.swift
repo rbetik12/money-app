@@ -50,7 +50,6 @@ struct MainScreenView: View {
 				}
 				
 				VStack {
-					
 					NavigationLink(destination: ExpenseView()) {
 						Text("Add expense")
 					}
@@ -84,12 +83,6 @@ struct MainScreenView: View {
 				}
 				
 				Spacer()
-			}
-			.toolbar {
-				Image(systemName: "gearshape.fill")
-					.font(.title2)
-					.foregroundColor(.gray)
-					.padding()
 			}
 			.navigationBarTitleDisplayMode(.inline)
 			.navigationTitle("Money App")

@@ -22,6 +22,8 @@ class MoneyManager: ObservableObject {
 		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
 		storage.moneyData.expenses.append(expense)
 		storage.moneyData.balance -= amount
+		
+		objectWillChange.send()
 	}
 	
 	func addIncome(description: String,
@@ -32,6 +34,8 @@ class MoneyManager: ObservableObject {
 		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
 		storage.moneyData.incomes.append(income)
 		storage.moneyData.balance += amount
+		
+		objectWillChange.send()
 	}
 
 	func getAllExpenses() -> [MoneyOperation] {
