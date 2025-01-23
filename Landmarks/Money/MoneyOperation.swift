@@ -13,4 +13,5 @@ struct MoneyOperation: Identifiable, Codable {
 	let category: Category
 	let amount: Double
 	let description: String
+	let currency: Currency
 }

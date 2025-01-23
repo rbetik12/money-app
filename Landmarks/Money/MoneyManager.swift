@@ -19,9 +19,9 @@ class MoneyManager: ObservableObject {
 					currency: Currency,
 					amount: Double,
 					date: Date = Date()) {
-		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
+		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency)
 		storage.moneyData.expenses.append(expense)
-		storage.moneyData.balance -= amount
+		storage.moneyData.balance -= storage.convert(amount: amount, currency: currency)
 		
 		objectWillChange.send()
 	}
@@ -31,30 +31,46 @@ class MoneyManager: ObservableObject {
 					currency: Currency,
 					amount: Double,
 					date: Date = Date()) {
-		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description)
+		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency)
 		storage.moneyData.incomes.append(income)
-		storage.moneyData.balance += amount
+		storage.moneyData.balance += storage.convert(amount: amount, currency: currency)
 		
 		objectWillChange.send()
 	}
 
 	func getAllExpenses() -> [MoneyOperation] {
-		return storage.moneyData.expenses
+		let convertedExpenses = storage.moneyData.expenses.map { operation in
+			MoneyOperation(id: operation.id,
+						   date: operation.date,
+						   category: operation.category,
+						   amount: storage.convert(amount: operation.amount, currency: operation.currency),
+						   description: operation.description,
+						   currency: operation.currency)
+		}
+		return convertedExpenses
 	}
 	
 	func getAllIncomes() -> [MoneyOperation] {
-		return storage.moneyData.incomes
+		let convertedIncomes = storage.moneyData.incomes.map { operation in
+			MoneyOperation(id: operation.id,
+						   date: operation.date,
+						   category: operation.category,
+						   amount: storage.convert(amount: operation.amount, currency: operation.currency),
+						   description: operation.description,
+						   currency: operation.currency)
+		}
+		return convertedIncomes
 	}
 	
 	func getIncomeAmount() -> Double {
 		return storage.moneyData.incomes.reduce(0) { (result, item) in
-			result + item.amount
+			result + storage.convert(amount: item.amount, currency: item.currency)
 		}
 	}
 	
 	func getExpenseAmount() -> Double {
 		return storage.moneyData.expenses.reduce(0) { (result, item) in
-			result + item.amount
+			result + storage.convert(amount: item.amount, currency: item.currency)
 		}
 	}
 	
@@ -72,11 +88,11 @@ class MoneyManager: ObservableObject {
 	func getOperationsSumByCategory(isExpense: Bool = true) -> [Category: Double] {
 		if (isExpense) {
 			return storage.moneyData.expenses.reduce(into: [Category: Double]()) { result, operation in
-				result[operation.category, default: 0] += operation.amount
+				result[operation.category, default: 0] += storage.convert(amount: operation.amount, currency: operation.currency)
 			}
 		}
 		return storage.moneyData.incomes.reduce(into: [Category: Double]()) { result, operation in
-			result[operation.category, default: 0] += operation.amount
+			result[operation.category, default: 0] += storage.convert(amount: operation.amount, currency: operation.currency)
 		}
 	}
 }

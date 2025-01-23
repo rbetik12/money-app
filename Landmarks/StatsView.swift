@@ -46,7 +46,7 @@ struct ExpenseRow: View {
 					.foregroundColor(.gray)
 			}
 			Spacer()
-			Text(String(format: "-%.1f$", amount))
+			Text(String(format: "-%.1f€", amount))
 				.font(.headline)
 				.foregroundColor(.gray)
 		}

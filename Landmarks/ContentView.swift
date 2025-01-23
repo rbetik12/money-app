@@ -21,7 +21,7 @@ struct MainScreenView: View {
 									.foregroundColor(.white)
 									.padding()
 								
-								Text(String(format: "%.1f", moneyManager.getBalance()) + "$")
+								Text(String(format: "%.1f", moneyManager.getBalance()) + "€")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
@@ -35,14 +35,14 @@ struct MainScreenView: View {
 								Text("Income")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + "$")
+								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + "€")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 								
 								Text("Expenses")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "-%.1f", moneyManager.getExpenseAmount()) + "$")
+								Text(String(format: "-%.1f", moneyManager.getExpenseAmount()) + "€")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
