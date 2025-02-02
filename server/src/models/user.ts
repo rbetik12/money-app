@@ -1,12 +1,6 @@
 const { DataTypes, Model, InferAttributes, InferCreationAttributes, CreationOptional } = require('sequelize');
 const { sequelize } = require('../config/database');
 
-interface IUserAttributes {
-    id: string;
-    google_id?: string | null; // Google ID can be null or undefined
-    google_refresh_token?: string | null; // Google Refresh Token can be null or undefined
-}
-
 // @ts-ignore
 class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: string;

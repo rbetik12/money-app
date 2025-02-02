@@ -13,19 +13,6 @@ services:
     networks:
       - my_network
 
-  pgadmin:
-    image: dpage/pgadmin4
-    container_name: my_pgadmin
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@example.com
-      PGADMIN_DEFAULT_PASSWORD: admin
-    ports:
-      - "6969:80"  # pgAdmin will be available on localhost:8080
-    depends_on:
-      - postgres  # Ensure PostgreSQL is ready before starting pgAdmin
-    networks:
-      - my_network
-
 volumes:
   postgres_data:
 

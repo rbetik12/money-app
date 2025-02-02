@@ -3,13 +3,49 @@ import dotenv from "dotenv";
 const {OAuth2Client} = require('google-auth-library');
 const jwt = require('jsonwebtoken');
 import { sequelize } from './config/database';
-import { deleteUserCredentails, updateOrCreateUserOnGoogleSignIn } from "./db";
+import { addMoneyOperation, deleteUserCredentails, updateOrCreateUserOnGoogleSignIn } from "./db";
 import { deserializeToken } from "./utils";
+import MoneyOperation from "./models/money-operations";
 
 dotenv.config();
 const app: Express = express();
 app.use(express.json())
 const port = process.env.PORT || 3000;
+
+app.post('/v1/data/money-operation', async (req: any, res: any) => {
+    console.debug(req.body)
+    let request = req.body
+    const token = req.body.token;
+
+    console.debug(token)
+
+    if (!token) {
+        console.error('Token is missing')
+        return res.status(403).json({ error: 'Token is missing' });
+    }
+
+    let payload = deserializeToken(token);
+    if (!payload) {
+        console.error('Invalid payload')
+        return res.status(400).json({ error: 'Invalid token' });
+    }
+
+    let op = new MoneyOperation()
+    op.id = request["id"]
+    op.currency = request["currency"]
+    op.amount = Number(request["amount"])
+    op.description = request["description"]
+    op.category = request["category"]
+    op.date = request["date"]
+    op.isExpense = request["isExpense"] == "true"
+    op.userId = payload.id
+
+    let moneyOp = await addMoneyOperation(op);
+    if (moneyOp === null) {
+        console.error('Creating money op error');
+        return res.status(400).json({ error: 'Creating money op error' });
+    }
+})
 
 app.post('/v1/auth/signout', async (req: any, res: any) => {
     const { token } = req.body;

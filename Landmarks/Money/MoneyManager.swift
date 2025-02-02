@@ -24,6 +24,7 @@ class MoneyManager: ObservableObject {
 		storage.moneyData.balance -= storage.convert(amount: amount, currency: currency)
 		
 		objectWillChange.send()
+		sendMoneyOperation(operation: expense, isExpense: true)
 	}
 	
 	func addIncome(description: String,
@@ -36,6 +37,7 @@ class MoneyManager: ObservableObject {
 		storage.moneyData.balance += storage.convert(amount: amount, currency: currency)
 		
 		objectWillChange.send()
+		sendMoneyOperation(operation: income, isExpense: false)
 	}
 
 	func getAllExpenses() -> [MoneyOperation] {
@@ -94,6 +96,37 @@ class MoneyManager: ObservableObject {
 		return storage.moneyData.incomes.reduce(into: [Category: Double]()) { result, operation in
 			result[operation.category, default: 0] += storage.convert(amount: operation.amount, currency: operation.currency)
 		}
+	}
+	
+	private func sendMoneyOperation(operation: MoneyOperation, isExpense: Bool) {
+		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
+		if (tokenData == nil) {
+			print("Can't send money opration, user is not signed in")
+			return
+		}
+		let token = String(data: tokenData!, encoding: .utf8)
+		
+		let url = URL(string: "\(URLStorage.getBackendHost())/v1/data/money-operation")!
+		
+		var request = URLRequest(url: url)
+		request.httpMethod = "POST"
+		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.httpBody = try? JSONEncoder().encode([
+			"token": token,
+			"id": operation.id.uuidString,
+			"currency": operation.currency.rawValue,
+			"amount": String(operation.amount),
+			"description": operation.description,
+			"category": operation.category.name,
+			"isExpense": isExpense ? "true" : "false"
+		])
+		
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error = error {
+				print("Error sending money operation: \(error)")
+				return
+			}
+		}.resume()
 	}
 }
 

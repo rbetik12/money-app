@@ -9,10 +9,10 @@ import Foundation
 import GoogleSignIn
 
 class SignInManager : ObservableObject {
-	private let TOKEN_KEYCHAIN_KEY = "jwtToken"
+	static let TOKEN_KEYCHAIN_KEY = "jwtToken"
 	
 	func getToken() -> String {
-		if let data = KeychainManager.instance.read(forKey: TOKEN_KEYCHAIN_KEY),
+		if let data = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY),
 		   let token = String(data: data, encoding: .utf8) {
 			return token
 		}
@@ -44,7 +44,7 @@ class SignInManager : ObservableObject {
 	func signOut() {
 		GIDSignIn.sharedInstance.signOut()
 		signOutInternal()
-		KeychainManager.instance.delete(forKey: TOKEN_KEYCHAIN_KEY)
+		KeychainManager.instance.delete(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 	}
 	
 	private func signOutInternal() {
@@ -91,7 +91,7 @@ class SignInManager : ObservableObject {
 	
 	private func setToken(token: String) {
 		if let data = token.data(using: .utf8) {
-			KeychainManager.instance.save(data, forKey: TOKEN_KEYCHAIN_KEY)
+			KeychainManager.instance.save(data, forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 			print("JWT token saved to Keychain")
 		}
 	}

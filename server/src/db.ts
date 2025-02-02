@@ -1,4 +1,5 @@
 import { sequelize } from './config/database';
+import MoneyOperation from './models/money-operations';
 import User from './models/user'
 
 export async function updateOrCreateUserOnGoogleSignIn(id: String, refreshToken: String): Promise<User | null> {
@@ -35,6 +36,15 @@ export async function updateOrCreateUserOnGoogleSignIn(id: String, refreshToken:
     }
 
     return null;
+}
+
+export async function addMoneyOperation(op: MoneyOperation): Promise<MoneyOperation | null> {
+    try {
+        return await MoneyOperation.create(op)
+    } catch (e: any) {
+        console.error(`Error in creating MoneyOperation: ${e.message}`)
+        return null
+    }
 }
 
 export async function deleteUserCredentails(user: User): Promise<boolean> {
