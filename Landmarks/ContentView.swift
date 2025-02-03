@@ -5,8 +5,11 @@ import GoogleSignInSwift
 struct MainScreenView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var signInManager: SignInManager
+	@EnvironmentObject var settingsManager: SettingsManager
+	@StateObject private var speechRecognizer = SpeechManager()
 	
 	@State var isSignedIn = false
+	@State private var isRecording = false
 	
 	var body: some View {
 		NavigationStack {
@@ -72,6 +75,19 @@ struct MainScreenView: View {
 					}) {
 						Text("Sign out")
 					}
+					
+					Button(isRecording ? "Stop Recording" : "Start Recording") {
+						if isRecording {
+							speechRecognizer.stopRecording()
+						} else {
+							speechRecognizer.requestPermissions()
+							speechRecognizer.startRecording(locale: settingsManager.getLocale())
+						}
+						isRecording.toggle()
+					}
+					.padding()
+					
+					Text(speechRecognizer.transcribedText)
 				} else {
 					GoogleSignInButton(action: {
 						signInManager.googleSignIn(onSuccess: {

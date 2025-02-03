@@ -22,6 +22,9 @@
 		2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2315C2C12D18B86B002AEFE7 /* ContentView.swift */; };
 		2315C2C42D18B86C002AEFE7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2315C2C32D18B86C002AEFE7 /* Assets.xcassets */; };
 		2315C2C72D18B86C002AEFE7 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2315C2C62D18B86C002AEFE7 /* Preview Assets.xcassets */; };
+		2375178F2D4F9778007908A6 /* SpeechManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2375178E2D4F9772007908A6 /* SpeechManager.swift */; };
+		237517912D4FB650007908A6 /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237517902D4FB649007908A6 /* SettingsManager.swift */; };
+		237517972D502ECC007908A6 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 237517962D502ECC007908A6 /* SettingsView.swift */; };
 		238DA1BB2D3F1F3F007BF580 /* Color+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 238DA1BA2D3F1F3F007BF580 /* Color+Hex.swift */; };
 		239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C72D1E0A7800B2C616 /* MoneyManager.swift */; };
 		239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C92D1E0AED00B2C616 /* Currency.swift */; };
@@ -45,6 +48,9 @@
 		2315C2C12D18B86B002AEFE7 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		2315C2C32D18B86C002AEFE7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		2315C2C62D18B86C002AEFE7 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		2375178E2D4F9772007908A6 /* SpeechManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechManager.swift; sourceTree = "<group>"; };
+		237517902D4FB649007908A6 /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		237517962D502ECC007908A6 /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		238DA1BA2D3F1F3F007BF580 /* Color+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Hex.swift"; sourceTree = "<group>"; };
 		239436C72D1E0A7800B2C616 /* MoneyManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyManager.swift; sourceTree = "<group>"; };
 		239436C92D1E0AED00B2C616 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
@@ -68,6 +74,8 @@
 		230AE6F02D3BDA5B005336E0 /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				237517902D4FB649007908A6 /* SettingsManager.swift */,
+				2375178E2D4F9772007908A6 /* SpeechManager.swift */,
 				230AE6F12D3BDA6F005336E0 /* SignInManager.swift */,
 				230AE6F32D3BDB60005336E0 /* KeychainManager.swift */,
 				230AE6F52D3BDBE2005336E0 /* URLStorage.swift */,
@@ -81,6 +89,7 @@
 			isa = PBXGroup;
 			children = (
 				230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */,
+				237517962D502ECC007908A6 /* SettingsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -221,10 +230,12 @@
 				230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */,
 				2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */,
 				230755FB2D1B714700CBCA07 /* Category.swift in Sources */,
+				237517912D4FB650007908A6 /* SettingsManager.swift in Sources */,
 				230AE6F22D3BDA6F005336E0 /* SignInManager.swift in Sources */,
 				239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */,
 				2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */,
 				230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */,
+				2375178F2D4F9778007908A6 /* SpeechManager.swift in Sources */,
 				238DA1BB2D3F1F3F007BF580 /* Color+Hex.swift in Sources */,
 				239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */,
 				230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */,
@@ -232,6 +243,7 @@
 				2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */,
 				23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */,
 				2313D8482D29F12100517233 /* StatsView.swift in Sources */,
+				237517972D502ECC007908A6 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -369,8 +381,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Landmarks/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = MoneyAI;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record your voice during expenses tracking.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need access to speech recognition to analyze your expenses.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;
@@ -407,8 +420,9 @@
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Landmarks/Info.plist;
-				INFOPLIST_KEY_CFBundleDisplayName = MoneyAI;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.finance";
+				INFOPLIST_KEY_NSMicrophoneUsageDescription = "We need access to your microphone to record your voice during expenses tracking.";
+				INFOPLIST_KEY_NSSpeechRecognitionUsageDescription = "We need access to speech recognition to analyze your expenses.";
 				INFOPLIST_KEY_UIApplicationSceneManifest_Generation = YES;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchScreen_Generation = YES;

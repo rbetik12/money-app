@@ -10,6 +10,7 @@ import Foundation
 enum Currency: String, CaseIterable, Identifiable, Codable {
 	case eur = "EUR"
 	case rsd = "RSD"
+	case usd = "USD"
 	
 	var id: Self { self }
 }

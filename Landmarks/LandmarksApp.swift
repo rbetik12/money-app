@@ -14,6 +14,7 @@ struct LandmarksApp: App {
 	private let moneyManager = MoneyManager(storage: MoneyManagerStorage())
 	private let categoryManager = CategoryManager()
 	private let signInManager = SignInManager()
+	private let settingsManager = SettingsManager()
 	
 	var body: some Scene {
 		WindowGroup {
@@ -21,6 +22,7 @@ struct LandmarksApp: App {
 				.environmentObject(moneyManager)
 				.environmentObject(categoryManager)
 				.environmentObject(signInManager)
+				.environmentObject(settingsManager)
 		}
 		.onChange(of: scenePhase) { newScenePhase in
 			switch newScenePhase {

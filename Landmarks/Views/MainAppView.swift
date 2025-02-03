@@ -21,6 +21,12 @@ struct MainAppView: View {
 					Label("Stats", systemImage: "chart.pie")
 				}
 				.tag(2)
+			
+			SettingsView()
+				.tabItem {
+					Label("Settings", systemImage: "gear")
+				}
+				.tag(3)
 		}
 	}
 }
