@@ -67,16 +67,16 @@ class SpeechManager: NSObject, ObservableObject, SFSpeechRecognizerDelegate {
 					}
 				}
 				if error != nil {
-					self.stopRecording()
+					self.stopRecording(onSuccess: {})
 				}
 			}
 		} catch {
 			print("Error starting recording: \(error)")
-			stopRecording()
+			stopRecording(onSuccess: {})
 		}
 	}
 
-	func stopRecording() {
+	func stopRecording(onSuccess: () -> Void) {
 		audioEngine.stop()
 		audioEngine.inputNode.removeTap(onBus: 0)
 		recognitionRequest?.endAudio()

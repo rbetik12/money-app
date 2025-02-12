@@ -76,9 +76,22 @@ struct MainScreenView: View {
 						Text("Sign out")
 					}
 					
+					Circle()
+						.fill(Color.red)
+						.frame(width: isRecording ? 30 : 20, height: isRecording ? 30 : 20)
+						.opacity(isRecording ? 1 : 0) // Hide when not recording
+						.animation(
+							isRecording ?
+							Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true)
+							: .default,
+							value: isRecording
+						)
+					
 					Button(isRecording ? "Stop Recording" : "Start Recording") {
 						if isRecording {
-							speechRecognizer.stopRecording()
+							speechRecognizer.stopRecording(onSuccess: {
+								
+							})
 						} else {
 							speechRecognizer.requestPermissions()
 							speechRecognizer.startRecording(locale: settingsManager.getLocale())

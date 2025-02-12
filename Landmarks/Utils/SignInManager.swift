@@ -92,7 +92,7 @@ class SignInManager : ObservableObject {
 	private func setToken(token: String) {
 		if let data = token.data(using: .utf8) {
 			KeychainManager.instance.save(data, forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
-			print("JWT token saved to Keychain")
+			print("JWT token saved to Keychain. Token: \(token)")
 		}
 	}
 }
