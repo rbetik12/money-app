@@ -3,12 +3,4 @@ ktor:
     modules:
       - com.moneyai.ApplicationKt.module
   deployment:
-    port: 8080
-jwt:
-  domain: "https://jwt-provider-domain/"
-  audience: "jwt-audience"
-  realm: "ktor sample app"
-postgres:
-  url: "jdbc:postgresql://localhost/default"
-  user: username
-  password: password
+    port: 3000

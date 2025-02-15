@@ -1,12 +1,17 @@
+import java.util.Properties
+import java.io.File
+
 val h2_version: String by project
 val kotlin_version: String by project
 val logback_version: String by project
 val postgres_version: String by project
+val exposedVersion: String by project
 
 plugins {
     kotlin("jvm") version "2.1.10"
     id("io.ktor.plugin") version "3.0.3"
     id("org.jetbrains.kotlin.plugin.serialization") version "2.1.10"
+    id("com.avast.gradle.docker-compose") version "0.17.12"
 }
 
 group = "com.moneyai"
@@ -22,8 +27,6 @@ application {
 repositories {
     mavenCentral()
 }
-
-val exposedVersion: String by project
 
 dependencies {
     implementation("io.ktor:ktor-server-core")
@@ -45,6 +48,10 @@ dependencies {
     implementation("io.ktor:ktor-server-netty")
     implementation("ch.qos.logback:logback-classic:$logback_version")
     implementation("io.ktor:ktor-server-config-yaml")
+    implementation("com.google.api-client:google-api-client:2.7.2")
+    implementation("com.google.oauth-client:google-oauth-client:1.37.0")
+    implementation("com.avast.gradle.docker-compose:com.avast.gradle.docker-compose.gradle.plugin:0.17.12")
+
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
 }

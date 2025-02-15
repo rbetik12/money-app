@@ -83,6 +83,10 @@ class SignInManager : ObservableObject {
 			
 			if let data = data {
 				let token = String(data: data, encoding: .utf8)!
+				if (token.count <= 0) {
+					print("Error: Empty token")
+					return
+				}
 				self.setToken(token: token)
 				onSuccess()
 			}

@@ -1,11 +1,11 @@
 package com.moneyai
 
+import com.moneyai.db.UserDAO
+import com.moneyai.db.UserTable
 import io.ktor.http.*
 import io.ktor.server.application.*
-import io.ktor.server.request.*
-import io.ktor.server.response.*
-import io.ktor.server.routing.*
 import org.jetbrains.exposed.sql.*
+import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabases() {
     Database.connect(
@@ -13,4 +13,8 @@ fun Application.configureDatabases() {
         user = "myuser",
         password = "mypassword"
     )
+
+    transaction {
+        SchemaUtils.create(UserTable)
+    }
 }

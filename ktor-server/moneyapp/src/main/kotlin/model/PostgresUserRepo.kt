@@ -15,15 +15,32 @@ class PostgresUserRepo : UserRepo {
         UserDAO.all().map(::daoToModel)
     }
 
-    override suspend fun add(user: User): Unit = suspendTransaction {
+    override suspend fun add(user: User): User = suspendTransaction {
         UserDAO.new {
             googleId = user.googleId
             googleRefreshToken = user.googleRefreshToken
-        }
+        }.let(::daoToModel)
     }
 
     override suspend fun remove(user: User): Boolean = suspendTransaction {
         val rows = UserTable.deleteWhere { UserTable.id eq user.id }
         rows > 0
+    }
+
+    override suspend fun find(user: User, useGoogleId: Boolean): User? = suspendTransaction {
+        if (useGoogleId) {
+            UserDAO.find { UserTable.googleId eq user.googleId }.firstOrNull()?.let(::daoToModel)
+        } else {
+            UserDAO.find { UserTable.id eq user.id }.firstOrNull()?.let(::daoToModel)
+        }
+    }
+
+    override suspend fun update(user: User): Boolean = suspendTransaction {
+        val userToUpdate = UserDAO.find { UserTable.id eq user.id }.firstOrNull() ?: return@suspendTransaction false
+        userToUpdate.apply {
+            googleId = user.googleId
+            googleRefreshToken = user.googleRefreshToken
+        }
+        true
     }
 }
