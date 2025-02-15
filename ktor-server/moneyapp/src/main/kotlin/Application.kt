@@ -1,6 +1,7 @@
 package com.moneyai
 
 import com.moneyai.model.PostgresUserRepo
+import com.moneyai.service.MoneyOperationService
 import com.moneyai.service.UserService
 import io.ktor.server.application.*
 
@@ -15,4 +16,5 @@ fun Application.module() {
     configureHTTP()
     configureSerialization()
     configureRouting(UserService())
+    configureMoneyOperationRouting(PostgresUserRepo(), MoneyOperationService(PostgresUserRepo()))
 }

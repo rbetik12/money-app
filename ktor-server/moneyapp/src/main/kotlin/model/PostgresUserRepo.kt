@@ -1,25 +1,22 @@
 package com.moneyai.model
 
-import com.moneyai.db.UserDAO
+import com.moneyai.db.UserEntity
 import com.moneyai.db.UserTable
-import com.moneyai.db.daoToModel
 import com.moneyai.db.suspendTransaction
 import org.jetbrains.exposed.sql.SqlExpressionBuilder.eq
-import org.jetbrains.exposed.sql.SqlExpressionBuilder.firstValue
 import org.jetbrains.exposed.sql.deleteWhere
-import java.util.UUID
-import kotlin.coroutines.suspendCoroutine
+import java.util.*
 
 class PostgresUserRepo : UserRepo {
     override suspend fun allUsers(): List<User> = suspendTransaction {
-        UserDAO.all().map(::daoToModel)
+        UserEntity.all().map(UserEntity::toModel)
     }
 
     override suspend fun add(user: User): User = suspendTransaction {
-        UserDAO.new {
+        UserEntity.new {
             googleId = user.googleId
             googleRefreshToken = user.googleRefreshToken
-        }.let(::daoToModel)
+        }.let(UserEntity::toModel)
     }
 
     override suspend fun remove(user: User): Boolean = suspendTransaction {
@@ -29,18 +26,22 @@ class PostgresUserRepo : UserRepo {
 
     override suspend fun find(user: User, useGoogleId: Boolean): User? = suspendTransaction {
         if (useGoogleId) {
-            UserDAO.find { UserTable.googleId eq user.googleId }.firstOrNull()?.let(::daoToModel)
+            UserEntity.find { UserTable.googleId eq user.googleId }.firstOrNull()?.let(UserEntity::toModel)
         } else {
-            UserDAO.find { UserTable.id eq user.id }.firstOrNull()?.let(::daoToModel)
+            UserEntity.find { UserTable.id eq user.id }.firstOrNull()?.let(UserEntity::toModel)
         }
     }
 
     override suspend fun update(user: User): Boolean = suspendTransaction {
-        val userToUpdate = UserDAO.find { UserTable.id eq user.id }.firstOrNull() ?: return@suspendTransaction false
+        val userToUpdate = UserEntity.find { UserTable.id eq user.id }.firstOrNull() ?: return@suspendTransaction false
         userToUpdate.apply {
             googleId = user.googleId
             googleRefreshToken = user.googleRefreshToken
         }
         true
+    }
+
+    override suspend fun findUserById(id: UUID): UserEntity? = suspendTransaction {
+        UserEntity.find { UserTable.id eq id }.firstOrNull()
     }
 }

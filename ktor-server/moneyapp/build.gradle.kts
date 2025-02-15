@@ -38,6 +38,8 @@ dependencies {
     implementation("io.ktor:ktor-server-cors")
     implementation("io.ktor:ktor-server-content-negotiation")
     implementation("io.ktor:ktor-serialization-kotlinx-json")
+    implementation("io.ktor:ktor-server-call-logging")
+    implementation("ch.qos.logback:logback-classic:1.5.16")
     implementation("org.postgresql:postgresql:$postgres_version")
     implementation("com.h2database:h2:$h2_version")
     implementation("org.jetbrains.exposed:exposed-core:$exposedVersion")
