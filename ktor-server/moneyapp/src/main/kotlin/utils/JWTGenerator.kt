@@ -17,4 +17,14 @@ object JWTGenerator {
             .withClaim("id", user.id.toString())
             .sign(algorithm)
     }
+
+    fun parseToken(token: String): UUID? {
+        return try {
+            val verifier = JWT.require(algorithm).withIssuer("moneyai").build()
+            val decodedJWT = verifier.verify(token)
+            UUID.fromString(decodedJWT.getClaim("id").asString())
+        } catch (e: Exception) {
+            null
+        }
+    }
 }

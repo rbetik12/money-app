@@ -3,10 +3,7 @@ package com.moneyai
 import com.auth0.jwt.JWT
 import com.auth0.jwt.algorithms.Algorithm
 import com.moneyai.db.UserDAO
-import com.moneyai.model.SignInRequest
-import com.moneyai.model.SignOutRequest
-import com.moneyai.model.User
-import com.moneyai.model.UserRepo
+import com.moneyai.model.*
 import com.moneyai.service.UserService
 import com.moneyai.utils.GoogleAuthVerifier
 import com.moneyai.utils.JWTGenerator
@@ -57,6 +54,18 @@ fun Application.configureRouting(userService: UserService) {
                     call.respond(HttpStatusCode.OK, JWTGenerator.generateToken(user))
                 } else {
                     call.respond(HttpStatusCode.Forbidden, "Invalid ID token.")
+                }
+            }
+        }
+        route("/v1/auth/signout") {
+            post {
+                val request = call.receive<SignOutRequest>()
+                val userId = JWTGenerator.parseToken(request.token)
+                if (userId != null) {
+                    userService.deleteCredentials(userId)
+                    call.respond(HttpStatusCode.OK)
+                } else {
+                    call.respond(HttpStatusCode.BadRequest, "Invalid token.")
                 }
             }
         }

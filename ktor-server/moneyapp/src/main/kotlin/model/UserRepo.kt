@@ -1,5 +1,7 @@
 package com.moneyai.model
 
+import java.util.*
+
 interface UserRepo {
     suspend fun allUsers(): List<User>
     suspend fun add(user: User): User

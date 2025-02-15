@@ -47,6 +47,7 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-json:$exposedVersion")
     implementation("io.ktor:ktor-server-netty")
     implementation("ch.qos.logback:logback-classic:$logback_version")
+    implementation("io.ktor:ktor-server-status-pages")
     implementation("io.ktor:ktor-server-config-yaml")
     implementation("com.google.api-client:google-api-client:2.7.2")
     implementation("com.google.oauth-client:google-oauth-client:1.37.0")
