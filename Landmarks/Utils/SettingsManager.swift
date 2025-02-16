@@ -12,11 +12,29 @@ class SettingsManager : ObservableObject {
 	@AppStorage("language") private var language: String = "en-US"
 	@AppStorage("currency") private var currency: Currency = .eur
 	
+	@Published private(set) var categories: [Category] = []
+	
+	private let categoriesKey = "categories"
 	private let supportedLanguages: [String: String] = [
 		"en-US": "English (US)",
 		"ru-RU": "Russian"
 	]
 	
+	init() {
+		loadCategories()
+		
+		// first launch
+		if (categories.isEmpty) {
+			addCategory(Category(aName: "Food", anImageName: "carrot.fill", isExpense: true))
+			addCategory(Category(aName: "Transport", anImageName: "car.fill", isExpense: true))
+			addCategory(Category(aName: "Shopping", anImageName: "bag.fill", isExpense: true))
+			addCategory(Category(aName: "Service", anImageName: "creditcard.fill", isExpense: true))
+			addCategory(Category(aName: "Restaurant", anImageName: "fork.knife", isExpense: true))
+			addCategory(Category(aName: "Salary", anImageName: "dollarsign", isExpense: false))
+			addCategory(Category(aName: "Dividend", anImageName: "dollarsign", isExpense: false))
+		}
+	}
+
 	func getSupportedLanguagesList() -> [String: String] {
 		return supportedLanguages
 	}
@@ -26,7 +44,7 @@ class SettingsManager : ObservableObject {
 	}
 	
 	func getLanguage() -> String {
-		return supportedLanguages.first(where: { $0.key == language })?.value ?? "Unknown"
+		return supportedLanguages[language] ?? "Unknown"
 	}
 	
 	func setLanguage(language: String) {
@@ -39,5 +57,38 @@ class SettingsManager : ObservableObject {
 	
 	func getCurrency() -> Currency {
 		return currency
+	}
+	
+	func loadCategories() {
+		if let data = UserDefaults.standard.data(forKey: categoriesKey) {
+			if let decoded = try? JSONDecoder().decode([Category].self, from: data) {
+				self.categories = decoded
+			}
+		}
+	}
+	
+	func saveCategories() {
+		if let encoded = try? JSONEncoder().encode(categories) {
+			UserDefaults.standard.set(encoded, forKey: categoriesKey)
+		}
+	}
+	
+	func getCategories() -> [Category] {
+		return categories
+	}
+	
+	func addCategory(_ category: Category) {
+		categories.append(category)
+		saveCategories()
+	}
+	
+	func removeCategory(at offsets: IndexSet) {
+		categories.remove(atOffsets: offsets)
+		saveCategories()
+	}
+	
+	func removeCategory(_ category: Category) {
+		categories.removeAll { $0.id == category.id }
+		saveCategories()
 	}
 }

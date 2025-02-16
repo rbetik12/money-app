@@ -152,6 +152,6 @@ struct StatsView: View {
 		
 		StatsView()
 			.environmentObject(MockMoneyManager(storage: moneyManagerStorage) as MoneyManager)
-			.environmentObject(CategoryManager())
+			.environmentObject(CategoryManager(settingsManager: SettingsManager()))
 	}
 }

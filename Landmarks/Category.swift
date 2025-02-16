@@ -22,6 +22,18 @@ struct Category : Identifiable, Equatable, Hashable, Codable {
 		expense = isExpense
 	}
 	
+	init(from decoder: Decoder) throws {
+		let container = try decoder.container(keyedBy: CodingKeys.self)
+		
+		// Decode ID (provide a default if missing)
+		id = (try? container.decode(UUID.self, forKey: .id)) ?? UUID()
+		
+		// Decode other properties
+		name = try container.decode(String.self, forKey: .name)
+		imageName = try container.decode(String.self, forKey: .imageName)
+		expense = try container.decode(Bool.self, forKey: .expense)
+	}
+	
 	var id: UUID
 	var name: String
 	var imageName: String
@@ -33,41 +45,20 @@ func ==(left: Category, right: Category) -> Bool {
 }
 
 class CategoryManager: ObservableObject {
-	@Published var categories: [Category] = []
-	@Published var activeCategory: Category = Category()
+	private var settingsManager: SettingsManager
 	
-	init() {
-		addCategory(name: "Food", imageName: "carrot.fill")
-		addCategory(name: "Transport", imageName: "car.fill")
-		addCategory(name: "Shopping", imageName: "bag.fill")
-		addCategory(name: "Service", imageName: "creditcard.fill")
-		addCategory(name: "Restaurant", imageName: "fork.knife")
-		
-		addCategory(name: "Salary", imageName: "dollarsign", isExpense: false)
-		addCategory(name: "Dividend", imageName: "dollarsign", isExpense: false)
-	}
-
-	func addCategory(name: String, imageName: String, isExpense: Bool = true) {
-		let category = Category(aName: name, anImageName: imageName, isExpense: isExpense)
-		categories.append(category)
-	}
-	
-	func setActiveCategory(category: Category) {
-		activeCategory = category
-	}
-	
-	func getActiveCategory() -> Category {
-		return activeCategory
+	init(settingsManager: SettingsManager) {
+		self.settingsManager = settingsManager
 	}
 	
 	func getCategoryByName(name: String) -> Category {
-		if let category = categories.first(where: {$0.name == name}) {
+		if let category = settingsManager.getCategories().first(where: {$0.name == name}) {
 			return category
 		}
-		return categories[0]
+		return settingsManager.getCategories().first!
 	}
 
 	func getAll() -> [Category] {
-		return categories
+		return settingsManager.getCategories()
 	}
 }

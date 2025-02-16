@@ -19,7 +19,7 @@ class MoneyManager: ObservableObject {
 					currency: Currency,
 					amount: Double,
 					date: Date = Date()) {
-		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency)
+		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency, isExpense: true)
 		storage.moneyData.expenses.append(expense)
 		storage.moneyData.balance -= storage.convert(amount: amount, currency: currency)
 		
@@ -32,7 +32,7 @@ class MoneyManager: ObservableObject {
 					currency: Currency,
 					amount: Double,
 					date: Date = Date()) {
-		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency)
+		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency, isExpense: false)
 		storage.moneyData.incomes.append(income)
 		storage.moneyData.balance += storage.convert(amount: amount, currency: currency)
 		
@@ -47,7 +47,8 @@ class MoneyManager: ObservableObject {
 						   category: operation.category,
 						   amount: storage.convert(amount: operation.amount, currency: operation.currency),
 						   description: operation.description,
-						   currency: operation.currency)
+						   currency: operation.currency,
+						   isExpense: true)
 		}
 		return convertedExpenses
 	}
@@ -59,7 +60,8 @@ class MoneyManager: ObservableObject {
 						   category: operation.category,
 						   amount: storage.convert(amount: operation.amount, currency: operation.currency),
 						   description: operation.description,
-						   currency: operation.currency)
+						   currency: operation.currency,
+						   isExpense: false)
 		}
 		return convertedIncomes
 	}
@@ -98,6 +100,49 @@ class MoneyManager: ObservableObject {
 		}
 	}
 	
+	func sync() {
+		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
+		if (tokenData == nil) {
+			print("Can't sync money operations, user is not signed in")
+			return
+		}
+		
+		let token = String(data: tokenData!, encoding: .utf8)!
+		let url = URL(string: "\(URLStorage.getBackendHost())/v1/data/money-operation/all/\(token)")!
+		var request = URLRequest(url: url)
+		request.httpMethod = "GET"
+		
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error = error {
+				print("Error get user's money operations: \(error)")
+				return
+			}
+			
+			guard let data = data else {
+				print("No data received")
+				return
+			}
+			
+			do {
+				let decoder = JSONDecoder()
+				// Custom date decoding strategy
+				let dateFormatter = DateFormatter()
+				dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS" // Supports microseconds
+				dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Ensure UTC handling if needed
+				decoder.dateDecodingStrategy = .formatted(dateFormatter)
+				let operations = try decoder.decode([MoneyOperation].self, from: data)
+				
+				DispatchQueue.main.async {
+					// Update your UI or state variable here
+					print("Successfully decoded money operations: \(operations)")
+				}
+			} catch {
+				print("Failed to decode money operations: \(error)")
+			}
+			
+		}.resume()
+	}
+	
 	private func sendMoneyOperation(operation: MoneyOperation, isExpense: Bool) {
 		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 		if (tokenData == nil) {
@@ -133,7 +178,7 @@ class MoneyManager: ObservableObject {
 class MockMoneyManager : MoneyManager {
 	override init(storage: MoneyManagerStorage) {
 		super.init(storage: storage)
-		let categoryManager = CategoryManager()
+		let categoryManager = CategoryManager(settingsManager: SettingsManager())
 		
 		addExpense(description: "Test", category: categoryManager.getCategoryByName(name: "Food"), currency: .rsd, amount: 100)
 		addExpense(description: "Test1", category: categoryManager.getCategoryByName(name: "Transport"), currency: .rsd, amount: 500)

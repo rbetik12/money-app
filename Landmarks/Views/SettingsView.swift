@@ -12,6 +12,39 @@ struct SettingsView: View {
 	
 	@State private var selectedLanguage = "en-US"
 	@State private var selectedCurrency: Currency = .eur
+	@State private var isAddingCategory = false
+	
+	func drawCategoriesList(name: String, expense: Bool) -> some View {
+		let categories = settingsManager.categories.filter {
+			$0.expense == expense
+		}
+		
+		return Section(header: Text(name)) {
+			if categories.isEmpty {
+				Text("No categories added")
+					.foregroundStyle(.gray)
+			} else {
+				ForEach(categories) { category in
+					HStack {
+						Image(systemName: category.imageName)
+						Text(category.name)
+						Button(action: {
+							settingsManager.removeCategory(category)
+						}) {
+							Image(systemName: "minus.circle")
+								.foregroundColor(.red)
+						}
+					}
+				}
+				.onDelete { indexSet in
+					settingsManager.removeCategory(at: indexSet)
+				}
+			}
+			Button("Add Category") {
+				isAddingCategory = true
+			}
+		}
+	}
 
 	var body: some View {
 		NavigationView {
@@ -27,7 +60,7 @@ struct SettingsView: View {
 						settingsManager.setLanguage(language: newValue)
 					}
 				}
-
+				
 				Section(header: Text("Main Currency")) {
 					Picker("Select Currency", selection: $selectedCurrency) {
 						ForEach(Currency.allCases) { currency in
@@ -39,12 +72,19 @@ struct SettingsView: View {
 						settingsManager.setCurrency(currency: newValue)
 					}
 				}
+				
+				drawCategoriesList(name: "Expense Categories", expense: true)
+				drawCategoriesList(name: "Income Categories", expense: false)
+				
 			}
 			.navigationTitle("Settings")
 		}
-		.onAppear() {
+		.onAppear {
 			selectedLanguage = settingsManager.getLanguage()
 			selectedCurrency = settingsManager.getCurrency()
+		}
+		.sheet(isPresented: $isAddingCategory) {
+			AddCategoryView(settingsManager: settingsManager)
 		}
 	}
 }

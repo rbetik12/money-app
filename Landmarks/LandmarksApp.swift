@@ -12,9 +12,13 @@ struct LandmarksApp: App {
 	@Environment(\.scenePhase) private var scenePhase
 	
 	private let moneyManager = MoneyManager(storage: MoneyManagerStorage())
-	private let categoryManager = CategoryManager()
+	private let categoryManager: CategoryManager
 	private let signInManager = SignInManager()
 	private let settingsManager = SettingsManager()
+	
+	init() {
+		categoryManager = CategoryManager(settingsManager: settingsManager)
+	}
 	
 	var body: some Scene {
 		WindowGroup {

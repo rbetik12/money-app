@@ -14,4 +14,5 @@ struct MoneyOperation: Identifiable, Codable {
 	let amount: Double
 	let description: String
 	let currency: Currency
+	let isExpense: Bool
 }

@@ -129,6 +129,8 @@ struct MainScreenView: View {
 					isSignedIn = true
 				}
 			}
+			
+			moneyManager.sync()
 		}
 	}
 }
@@ -139,7 +141,7 @@ struct MainScreenView: View {
 		
 		MainScreenView()
 			.environmentObject(MoneyManager(storage: moneyManagerStorage))
-			.environmentObject(CategoryManager())
+			.environmentObject(CategoryManager(settingsManager: SettingsManager()))
 			.environmentObject(SignInManager())
 	}
 }

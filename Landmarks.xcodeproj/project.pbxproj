@@ -30,6 +30,7 @@
 		239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C92D1E0AED00B2C616 /* Currency.swift */; };
 		23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDA2D1A26F4002945CB /* ExpenseView.swift */; };
 		23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDC2D1A27FC002945CB /* IncomeView.swift */; };
+		23B23AC72D62757600FE2AF7 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		239436C92D1E0AED00B2C616 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		23985FDA2D1A26F4002945CB /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
 		23985FDC2D1A27FC002945CB /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
+		23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 		230AE6F92D3DCB8D005336E0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */,
 				230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */,
 				237517962D502ECC007908A6 /* SettingsView.swift */,
 			);
@@ -243,6 +246,7 @@
 				2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */,
 				23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */,
 				2313D8482D29F12100517233 /* StatsView.swift in Sources */,
+				23B23AC72D62757600FE2AF7 /* AddCategoryView.swift in Sources */,
 				237517972D502ECC007908A6 /* SettingsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

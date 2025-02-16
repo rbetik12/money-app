@@ -13,6 +13,7 @@ struct ExpenseView: View {
 	@State private var description: String = ""
 	@State private var selectedCurrency: Currency = .rsd
 	@State private var shouldNavigate: Bool = false
+	@State private var activeCategory: Category? = nil
 	
 	@EnvironmentObject var categoryManager: CategoryManager
 	@EnvironmentObject var moneyManager: MoneyManager
@@ -23,7 +24,7 @@ struct ExpenseView: View {
 				ScrollView(.horizontal, showsIndicators: false) {
 					HStack(spacing: 16) {
 						Spacer(minLength: 0)
-						ForEach(categoryManager.categories) { category in
+						ForEach(categoryManager.getAll().filter{ $0.expense == true }) { category in
 							VStack {
 								Image(systemName: category.imageName)
 									.resizable()
@@ -33,10 +34,10 @@ struct ExpenseView: View {
 								
 								Text(category.name)
 									.font(.caption)
-									.foregroundColor(categoryManager.getActiveCategory() == category ? Color.blue : Color.gray)
+									.foregroundColor(activeCategory == category ? Color.blue : Color.gray)
 							}
 							.onTapGesture {
-								categoryManager.setActiveCategory(category: category)
+								activeCategory = category
 							}
 						}
 						Spacer(minLength: 0)
@@ -45,6 +46,9 @@ struct ExpenseView: View {
 				}
 				.frame(maxWidth: .infinity, alignment: .center)
 				.background(Color.gray.opacity(0.1))
+				.onAppear {
+					activeCategory = categoryManager.getAll().first
+				}
 				
 				HStack {
 					TextField("Expense", text: $expenseText)
@@ -68,7 +72,7 @@ struct ExpenseView: View {
 				Button("Add") {
 					moneyManager.addExpense(
 						description: description,
-						category: categoryManager.getActiveCategory(),
+						category: activeCategory!,
 						currency: selectedCurrency,
 						amount: Double(expense)
 					)
