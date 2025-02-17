@@ -81,32 +81,18 @@ class MoneyManagerStorage : ObservableObject {
 		guard let url = URL(string: "https://v6.exchangerate-api.com/v6/\(apiKey)/latest/EUR") else {
 			return
 		}
-		let task = URLSession.shared.dataTask(with: url) { data, response, error in
-			if let error = error {
-				print("Can't load exchange rates: \(error)")
-				return
-			}
+		
+		do {
+			let (data, _) = try await URLSession.shared.data(from: url)
+			let exchangeRatesResponse = try JSONDecoder().decode(ExchangeRateResponse.self, from: data)
+			self.moneyData.currencyRateUpdateTime = exchangeRatesResponse.timeNextUpdateUnix
 			
-			guard let data = data else {
-				return
+			for currency in Currency.allCases {
+				self.moneyData.convertionRates[currency] = exchangeRatesResponse.conversionRates[currency.rawValue.uppercased()]
 			}
-			
-			do {
-				let exchangeRatesResponse = try JSONDecoder().decode(ExchangeRateResponse.self, from: data)
-				self.moneyData.currencyRateUpdateTime = exchangeRatesResponse.timeNextUpdateUnix
-				
-				for currency in Currency.allCases {
-					if currency == self.moneyData.mainCurrency {
-						continue
-					}
-					
-					self.moneyData.convertionRates[currency] = exchangeRatesResponse.conversionRates[currency.rawValue.uppercased()]
-				}
-			} catch {
-				print("Can't parse rates json: \(error)")
-			}
+		} catch {
+			print("Can't parse rates json: \(error)")
 		}
-		task.resume()
 	}
 	
 	func load() async throws {

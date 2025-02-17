@@ -15,6 +15,5 @@ data class MoneyOperation(
     val amount: Double,
     val description: String,
     val currency: String,
-    val isExpense: Boolean,
-    val user: User
+    val isExpense: Boolean
 )

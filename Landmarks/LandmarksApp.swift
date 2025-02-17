@@ -11,13 +11,14 @@ import SwiftUI
 struct LandmarksApp: App {
 	@Environment(\.scenePhase) private var scenePhase
 	
-	private let moneyManager = MoneyManager(storage: MoneyManagerStorage())
+	private let moneyManager: MoneyManager
 	private let categoryManager: CategoryManager
 	private let signInManager = SignInManager()
 	private let settingsManager = SettingsManager()
 	
 	init() {
 		categoryManager = CategoryManager(settingsManager: settingsManager)
+		moneyManager = MoneyManager(storage: MoneyManagerStorage(), categoryManager: categoryManager)
 	}
 	
 	var body: some Scene {

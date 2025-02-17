@@ -134,14 +134,3 @@ struct MainScreenView: View {
 		}
 	}
 }
-
-#Preview {
-	ZStack {
-		let moneyManagerStorage = MoneyManagerStorage()
-		
-		MainScreenView()
-			.environmentObject(MoneyManager(storage: moneyManagerStorage))
-			.environmentObject(CategoryManager(settingsManager: SettingsManager()))
-			.environmentObject(SignInManager())
-	}
-}

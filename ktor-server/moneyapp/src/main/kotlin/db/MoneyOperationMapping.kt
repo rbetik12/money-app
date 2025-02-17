@@ -30,8 +30,7 @@ class MoneyOperationEntity(id: EntityID<UUID>) : UUIDEntity(id) {
             amount = entity.amount,
             description = entity.description,
             currency = entity.currency,
-            isExpense = entity.isExpense,
-            user = entity.user.let(UserEntity::toModel)
+            isExpense = entity.isExpense
         )
     }
 

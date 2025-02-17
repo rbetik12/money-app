@@ -16,3 +16,14 @@ struct MoneyOperation: Identifiable, Codable {
 	let currency: Currency
 	let isExpense: Bool
 }
+
+struct MoneyOperationInternal: Identifiable, Codable {
+	let id: UUID
+	let date: Date
+	let category: String
+	let amount: Double
+	let description: String
+	let currency: String
+	let isExpense: Bool
+}
+

@@ -9,9 +9,11 @@ import Foundation
 
 class MoneyManager: ObservableObject {
 	var storage: MoneyManagerStorage
+	var categoryManager: CategoryManager
 	
-	init(storage: MoneyManagerStorage) {
+	init(storage: MoneyManagerStorage, categoryManager: CategoryManager) {
 		self.storage = storage
+		self.categoryManager = categoryManager
 	}
 
 	func addExpense(description: String, 
@@ -20,10 +22,7 @@ class MoneyManager: ObservableObject {
 					amount: Double,
 					date: Date = Date()) {
 		let expense = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency, isExpense: true)
-		storage.moneyData.expenses.append(expense)
-		storage.moneyData.balance -= storage.convert(amount: amount, currency: currency)
-		
-		objectWillChange.send()
+		addExpenseInternal(op: expense)
 		sendMoneyOperation(operation: expense, isExpense: true)
 	}
 	
@@ -33,11 +32,22 @@ class MoneyManager: ObservableObject {
 					amount: Double,
 					date: Date = Date()) {
 		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency, isExpense: false)
-		storage.moneyData.incomes.append(income)
-		storage.moneyData.balance += storage.convert(amount: amount, currency: currency)
+		addIncomeInternal(op: income)
+		sendMoneyOperation(operation: income, isExpense: false)
+	}
+	
+	private func addExpenseInternal(op: MoneyOperation) {
+		storage.moneyData.expenses.append(op)
+		storage.moneyData.balance -= storage.convert(amount: op.amount, currency: op.currency)
 		
 		objectWillChange.send()
-		sendMoneyOperation(operation: income, isExpense: false)
+	}
+	
+	private func addIncomeInternal(op: MoneyOperation) {
+		storage.moneyData.incomes.append(op)
+		storage.moneyData.balance += storage.convert(amount: op.amount, currency: op.currency)
+		
+		objectWillChange.send()
 	}
 
 	func getAllExpenses() -> [MoneyOperation] {
@@ -125,16 +135,48 @@ class MoneyManager: ObservableObject {
 			
 			do {
 				let decoder = JSONDecoder()
-				// Custom date decoding strategy
 				let dateFormatter = DateFormatter()
-				dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS" // Supports microseconds
-				dateFormatter.timeZone = TimeZone(secondsFromGMT: 0) // Ensure UTC handling if needed
+				dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+				dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
 				decoder.dateDecodingStrategy = .formatted(dateFormatter)
-				let operations = try decoder.decode([MoneyOperation].self, from: data)
+				let operations = try decoder.decode([MoneyOperationInternal].self, from: data)
 				
-				DispatchQueue.main.async {
-					// Update your UI or state variable here
-					print("Successfully decoded money operations: \(operations)")
+				for operation in operations {
+					if operation.isExpense && !self.storage.moneyData.expenses.contains(where: { $0.id == operation.id }) {
+						DispatchQueue.main.async {
+							let op = MoneyOperation(id: operation.id,
+													date: operation.date,
+													category: self.categoryManager.getCategoryByName(name: operation.category),
+													amount: operation.amount,
+													description: operation.description,
+													currency: Currency(rawValue: operation.currency.uppercased())!,
+													isExpense: true)
+							self.addExpenseInternal(op: op)
+						}
+					} else if !operation.isExpense && !self.storage.moneyData.incomes.contains(where: { $0.id == operation.id }) {
+						DispatchQueue.main.async {
+							let op = MoneyOperation(id: operation.id,
+													date: operation.date,
+													category: self.categoryManager.getCategoryByName(name: operation.category),
+													amount: operation.amount,
+													description: operation.description,
+													currency: Currency(rawValue: operation.currency.uppercased())!,
+													isExpense: false)
+							self.addIncomeInternal(op: op)
+						}
+					}
+				}
+				
+				for expense in self.storage.moneyData.expenses {
+					if !operations.contains(where: { $0.id == expense.id }) {
+						self.sendMoneyOperation(operation: expense, isExpense: true)
+					}
+				}
+				
+				for income in self.storage.moneyData.incomes {
+					if !operations.contains(where: { $0.id == income.id }) {
+						self.sendMoneyOperation(operation: income, isExpense: false)
+					}
 				}
 			} catch {
 				print("Failed to decode money operations: \(error)")
@@ -172,16 +214,5 @@ class MoneyManager: ObservableObject {
 				return
 			}
 		}.resume()
-	}
-}
-
-class MockMoneyManager : MoneyManager {
-	override init(storage: MoneyManagerStorage) {
-		super.init(storage: storage)
-		let categoryManager = CategoryManager(settingsManager: SettingsManager())
-		
-		addExpense(description: "Test", category: categoryManager.getCategoryByName(name: "Food"), currency: .rsd, amount: 100)
-		addExpense(description: "Test1", category: categoryManager.getCategoryByName(name: "Transport"), currency: .rsd, amount: 500)
-		addExpense(description: "Test1", category: categoryManager.getCategoryByName(name: "Shopping"), currency: .rsd, amount: 50)
 	}
 }

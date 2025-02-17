@@ -1,6 +1,7 @@
 package com.moneyai.model
 
 import com.moneyai.db.MoneyOperationEntity
+import com.moneyai.db.MoneyOperationTable
 import com.moneyai.db.UserEntity
 import com.moneyai.db.suspendTransaction
 import org.jetbrains.exposed.dao.id.EntityID
@@ -9,6 +10,10 @@ import java.util.UUID
 class MoneyOperationRepo {
     suspend fun find(id: UUID): MoneyOperation? = suspendTransaction {
         MoneyOperationEntity.findById(id)?.let(MoneyOperationEntity::toModel)
+    }
+
+    suspend fun all(user: User): List<MoneyOperation> = suspendTransaction {
+        MoneyOperationEntity.find { MoneyOperationTable.user eq user.id }.map(MoneyOperationEntity::toModel)
     }
 
     suspend fun add(op: MoneyOperation, userEntity: UserEntity): MoneyOperation = suspendTransaction {

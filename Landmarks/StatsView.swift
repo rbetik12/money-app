@@ -145,13 +145,3 @@ struct StatsView: View {
 		return Color(hex: "#ffffff")
 	}
 }
-
-#Preview {
-	ZStack {
-		let moneyManagerStorage = MoneyManagerStorage()
-		
-		StatsView()
-			.environmentObject(MockMoneyManager(storage: moneyManagerStorage) as MoneyManager)
-			.environmentObject(CategoryManager(settingsManager: SettingsManager()))
-	}
-}
