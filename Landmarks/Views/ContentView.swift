@@ -6,10 +6,11 @@ struct MainScreenView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var signInManager: SignInManager
 	@EnvironmentObject var settingsManager: SettingsManager
-	@StateObject private var speechRecognizer = SpeechManager()
 	
 	@State var isSignedIn = false
-	@State private var isRecording = false
+	@State var voiceRecorderOpened = false
+	@State var parsedOperations: [MoneyOperation] = []
+	@State var parsedOperationsOpened = false
 	
 	var body: some View {
 		NavigationStack {
@@ -76,31 +77,11 @@ struct MainScreenView: View {
 						Text("Sign out")
 					}
 					
-					Circle()
-						.fill(Color.red)
-						.frame(width: isRecording ? 30 : 20, height: isRecording ? 30 : 20)
-						.opacity(isRecording ? 1 : 0) // Hide when not recording
-						.animation(
-							isRecording ?
-							Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true)
-							: .default,
-							value: isRecording
-						)
-					
-					Button(isRecording ? "Stop Recording" : "Start Recording") {
-						if isRecording {
-							speechRecognizer.stopRecording(onSuccess: {
-								
-							})
-						} else {
-							speechRecognizer.requestPermissions()
-							speechRecognizer.startRecording(locale: settingsManager.getLocale())
-						}
-						isRecording.toggle()
+					Button(action: {
+						voiceRecorderOpened.toggle()
+					}) {
+						Text("Record voice")
 					}
-					.padding()
-					
-					Text(speechRecognizer.transcribedText)
 				} else {
 					GoogleSignInButton(action: {
 						signInManager.googleSignIn(onSuccess: {
@@ -130,7 +111,19 @@ struct MainScreenView: View {
 				}
 			}
 			
-			moneyManager.sync()
+			// Wait a few seconds to load everything
+			DispatchQueue.main.asyncAfter(deadline: .now() + 3.5, execute: {
+				moneyManager.sync()
+			})
+		}
+		.sheet(isPresented: $voiceRecorderOpened) {
+			VoiceRequestView(onResult: { operations in
+				parsedOperations = operations
+				parsedOperationsOpened = true
+			})
+		}
+		.sheet(isPresented: $parsedOperationsOpened) {
+			MoneyOperationsView(operations: parsedOperations)
 		}
 	}
 }

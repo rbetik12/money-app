@@ -50,4 +50,8 @@ class CategoryManager: ObservableObject {
 	func getAll() -> [Category] {
 		return settingsManager.getCategories()
 	}
+	
+	func getAll(expense: Bool) -> [Category] {
+		return settingsManager.getCategories().filter({ $0.expense })
+	}
 }

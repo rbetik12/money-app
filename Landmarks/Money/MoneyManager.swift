@@ -110,7 +110,90 @@ class MoneyManager: ObservableObject {
 		}
 	}
 	
+	func sendOperationsText(text: String, onResult: @escaping(_ data: [MoneyOperation]) -> Void) {
+		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
+		if (tokenData == nil) {
+			print("Can't send money operations, user is not signed in")
+			return
+		}
+		let token = String(data: tokenData!, encoding: .utf8)!
+		
+		struct OperationsRequest: Codable {
+			let token: String
+			let text: String
+			let expenseCategories: [String]
+			let incomeCategories: [String]
+		}
+		
+		let body = OperationsRequest(token: token, text: text, expenseCategories: categoryManager.getAll(expense: true).map {$0.name}, incomeCategories: categoryManager.getAll(expense: false).map {$0.name})
+		let url = URL(string: "\(URLStorage.getBackendHost())/v1/data/money-operation/ai")!
+		var request = URLRequest(url: url)
+		request.httpMethod = "POST"
+		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+		request.httpBody = try? JSONEncoder().encode(body)
+		
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error = error {
+				print("Error get user's money operations: \(error)")
+				return
+			}
+			
+			guard let data = data else {
+				print("No data received")
+				return
+			}
+			
+			do {
+				let decoder = JSONDecoder()
+				let dateFormatter = DateFormatter()
+				dateFormatter.dateFormat = "yyyy-MM-dd'T'HH:mm:ss.SSSSSS"
+				dateFormatter.timeZone = TimeZone(secondsFromGMT: 0)
+				decoder.dateDecodingStrategy = .formatted(dateFormatter)
+				let operations = try decoder.decode([MoneyOperationInternal].self, from: data)
+				
+				var parsedOperations: [MoneyOperation] = []
+				
+				for operation in operations {
+					if operation.isExpense && !self.storage.moneyData.expenses.contains(where: { $0.id == operation.id }) {
+						let op = MoneyOperation(id: operation.id,
+												date: operation.date,
+												category: self.categoryManager.getCategoryByName(name: operation.category),
+												amount: operation.amount,
+												description: operation.description,
+												currency: Currency(rawValue: operation.currency.uppercased())!,
+												isExpense: true)
+						parsedOperations.append(op)
+						DispatchQueue.main.async {
+							self.addExpenseInternal(op: op)
+						}
+					} else if !operation.isExpense && !self.storage.moneyData.incomes.contains(where: { $0.id == operation.id }) {
+						let op = MoneyOperation(id: operation.id,
+												date: operation.date,
+												category: self.categoryManager.getCategoryByName(name: operation.category),
+												amount: operation.amount,
+												description: operation.description,
+												currency: Currency(rawValue: operation.currency.uppercased())!,
+												isExpense: true)
+						parsedOperations.append(op)
+						DispatchQueue.main.async {
+							self.addIncomeInternal(op: op)
+						}
+					}
+				}
+				
+				onResult(parsedOperations)
+			} catch {
+				print("Failed to decode money operations: \(error)")
+			}
+			
+		}.resume()
+	}
+	
 	func sync() {
+		if (storage.moneyData.convertionRates.isEmpty) {
+			return
+		}
+		
 		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 		if (tokenData == nil) {
 			print("Can't sync money operations, user is not signed in")

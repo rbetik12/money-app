@@ -31,6 +31,8 @@
 		23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDA2D1A26F4002945CB /* ExpenseView.swift */; };
 		23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDC2D1A27FC002945CB /* IncomeView.swift */; };
 		23B23AC72D62757600FE2AF7 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */; };
+		23B23AC92D6383EE00FE2AF7 /* VoiceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */; };
+		23B23ACB2D64A2C200FE2AF7 /* MoneyOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -58,6 +60,8 @@
 		23985FDA2D1A26F4002945CB /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
 		23985FDC2D1A27FC002945CB /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
 		23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
+		23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRequestView.swift; sourceTree = "<group>"; };
+		23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperationView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -90,9 +94,12 @@
 		230AE6F92D3DCB8D005336E0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */,
+				23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */,
 				23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */,
 				230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */,
 				237517962D502ECC007908A6 /* SettingsView.swift */,
+				2315C2C12D18B86B002AEFE7 /* ContentView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -132,7 +139,6 @@
 				2313D8492D2F2EBF00517233 /* Money */,
 				239436C92D1E0AED00B2C616 /* Currency.swift */,
 				2315C2BF2D18B86B002AEFE7 /* LandmarksApp.swift */,
-				2315C2C12D18B86B002AEFE7 /* ContentView.swift */,
 				2315C2C32D18B86C002AEFE7 /* Assets.xcassets */,
 				2315C2C52D18B86C002AEFE7 /* Preview Content */,
 				23985FDA2D1A26F4002945CB /* ExpenseView.swift */,
@@ -231,10 +237,12 @@
 				230755FD2D1B74A400CBCA07 /* MoneyOperation.swift in Sources */,
 				230AE6FB2D3DCB9B005336E0 /* MainAppView.swift in Sources */,
 				230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */,
+				23B23ACB2D64A2C200FE2AF7 /* MoneyOperationView.swift in Sources */,
 				2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */,
 				230755FB2D1B714700CBCA07 /* Category.swift in Sources */,
 				237517912D4FB650007908A6 /* SettingsManager.swift in Sources */,
 				230AE6F22D3BDA6F005336E0 /* SignInManager.swift in Sources */,
+				23B23AC92D6383EE00FE2AF7 /* VoiceRequestView.swift in Sources */,
 				239436C82D1E0A7800B2C616 /* MoneyManager.swift in Sources */,
 				2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */,
 				230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */,

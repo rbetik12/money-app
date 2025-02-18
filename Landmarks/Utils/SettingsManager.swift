@@ -34,6 +34,10 @@ class SettingsManager : ObservableObject {
 			addCategory(Category(aName: "Dividend", anImageName: "dollarsign", isExpense: false))
 		}
 	}
+	
+	func languageToHumanReadable(language: String) -> String {
+		return getSupportedLanguagesList()[language] ?? "English (US)"
+	}
 
 	func getSupportedLanguagesList() -> [String: String] {
 		return supportedLanguages
@@ -44,7 +48,7 @@ class SettingsManager : ObservableObject {
 	}
 	
 	func getLanguage() -> String {
-		return supportedLanguages[language] ?? "Unknown"
+		return language
 	}
 	
 	func setLanguage(language: String) {

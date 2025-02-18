@@ -3,6 +3,7 @@ package com.moneyai
 import com.moneyai.model.*
 import com.moneyai.service.MoneyOperationService
 import com.moneyai.utils.JWTGenerator
+import com.moneyai.utils.MoneyOperationAIParser
 import io.ktor.http.*
 import io.ktor.server.application.*
 import io.ktor.server.request.*
@@ -64,6 +65,30 @@ fun Application.configureMoneyOperationRouting(userRepo: UserRepo, moneyOperatio
                 }
 
                 call.respond(HttpStatusCode.OK, moneyOperationService.all(user))
+            }
+        }
+        route("/v1/data/money-operation/ai") {
+            post {
+                val req = call.receive<MoneyOperationRequestAI>()
+                val userId = JWTGenerator.parseToken(req.token)
+
+                if (userId == null) {
+                    call.respond(HttpStatusCode.Forbidden, "Invalid token.")
+                    return@post
+                }
+
+                val user = userRepo.find(User(id = userId, googleId = null, googleRefreshToken = null), false)
+                if (user == null) {
+                    call.respond(HttpStatusCode.BadRequest, "User with id: '$userId' wasn't found.")
+                    return@post
+                }
+
+                val operations = MoneyOperationAIParser.parse(req.text, req.expenseCategories, req.incomeCategories)
+                for (operation in operations) {
+                    moneyOperationService.add(operation, user)
+                }
+
+                call.respond(HttpStatusCode.OK, operations)
             }
         }
     }

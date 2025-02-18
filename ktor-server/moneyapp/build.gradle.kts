@@ -54,6 +54,7 @@ dependencies {
     implementation("com.google.api-client:google-api-client:2.7.2")
     implementation("com.google.oauth-client:google-oauth-client:1.37.0")
     implementation("com.avast.gradle.docker-compose:com.avast.gradle.docker-compose.gradle.plugin:0.17.12")
+    implementation("com.openai:openai-java:0.23.1")
 
     testImplementation("io.ktor:ktor-server-test-host")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit:$kotlin_version")
