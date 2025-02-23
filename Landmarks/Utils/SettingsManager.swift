@@ -13,26 +13,64 @@ class SettingsManager : ObservableObject {
 	@AppStorage("currency") private var currency: Currency = .eur
 	
 	@Published private(set) var categories: [Category] = []
+	@Published private var categoryUUIDToColor: [UUID: String] = [:]
 	
 	private let categoriesKey = "categories"
+	private let categoriesColorsKey = "categoriesColors"
 	private let supportedLanguages: [String: String] = [
 		"en-US": "English (US)",
 		"ru-RU": "Russian"
 	]
+	private let categoryColorsList = ["#ea5545", "#f46a9b", "#ef9b20", "#edbf33", "#ede15b", "#bdcf32", "#87bc45", "#27aeef", "#b33dc6"]
 	
 	init() {
 		loadCategories()
 		
 		// first launch
 		if (categories.isEmpty) {
-			addCategory(Category(aName: "Food", anImageName: "carrot.fill", isExpense: true))
-			addCategory(Category(aName: "Transport", anImageName: "car.fill", isExpense: true))
-			addCategory(Category(aName: "Shopping", anImageName: "bag.fill", isExpense: true))
-			addCategory(Category(aName: "Service", anImageName: "creditcard.fill", isExpense: true))
-			addCategory(Category(aName: "Restaurant", anImageName: "fork.knife", isExpense: true))
-			addCategory(Category(aName: "Salary", anImageName: "dollarsign", isExpense: false))
-			addCategory(Category(aName: "Dividend", anImageName: "dollarsign", isExpense: false))
+			var category = Category(aName: "Food", anImageName: "carrot.fill", isExpense: true)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Transport", anImageName: "car.fill", isExpense: true)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Shopping", anImageName: "bag.fill", isExpense: true)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Service", anImageName: "creditcard.fill", isExpense: true)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Restaurant", anImageName: "fork.knife", isExpense: true)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Salary", anImageName: "dollarsign", isExpense: false)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
+			
+			category = Category(aName: "Dividend", anImageName: "dollarsign", isExpense: false)
+			category.colorHex = getCategoryColor(uuid: category.id)
+			addCategory(category)
 		}
+	}
+	
+	func getCategoryColor(uuid: UUID) -> String {
+		if categoryUUIDToColor.contains(where: { $0.key == uuid }) {
+			return categoryUUIDToColor[uuid] ?? categoryColorsList[0]
+		}
+		
+		for (index, color) in categoryColorsList.enumerated() {
+			if !categoryUUIDToColor.contains(where: { $0.value == color }) {
+				categoryUUIDToColor[uuid] = color
+				return color
+			}
+		}
+		
+		return categoryColorsList[0]
 	}
 	
 	func languageToHumanReadable(language: String) -> String {
@@ -68,6 +106,10 @@ class SettingsManager : ObservableObject {
 			if let decoded = try? JSONDecoder().decode([Category].self, from: data) {
 				self.categories = decoded
 			}
+		}
+		
+		for category in categories {
+			categoryUUIDToColor[category.id] = category.colorHex
 		}
 	}
 	

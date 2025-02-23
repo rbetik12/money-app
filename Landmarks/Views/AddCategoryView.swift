@@ -55,7 +55,8 @@ struct AddCategoryView: View {
 				}
 				ToolbarItem(placement: .confirmationAction) {
 					Button("Save") {
-						let newCategory = Category(aName: name, anImageName: selectedImage, isExpense: isExpense)
+						var newCategory = Category(aName: name, anImageName: selectedImage, isExpense: isExpense)
+						newCategory.colorHex = settingsManager.getCategoryColor(uuid: newCategory.id)
 						settingsManager.addCategory(newCategory)
 						dismiss()
 					}

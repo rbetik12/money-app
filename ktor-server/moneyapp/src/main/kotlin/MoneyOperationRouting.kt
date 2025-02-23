@@ -43,6 +43,40 @@ fun Application.configureMoneyOperationRouting(userRepo: UserRepo, moneyOperatio
 
                 call.respond(HttpStatusCode.OK, moneyOperationService.add(moneyOperationReq, user))
             }
+            put {
+                val req = call.receive<MoneyOperationRequest>()
+                val userId = JWTGenerator.parseToken(req.token)
+
+                if (userId == null) {
+                    call.respond(HttpStatusCode.Forbidden, "Invalid token.")
+                    return@put
+                }
+
+                val user = userRepo.find(User(id = userId, googleId = null, googleRefreshToken = null), false)
+                if (user == null) {
+                    call.respond(HttpStatusCode.BadRequest, "User with id: '$userId' wasn't found.")
+                    return@put
+                }
+
+                val dbop = moneyOperationService.find(UUID.fromString(req.id))
+
+                if (dbop == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Money operation with id: '${req.id}' wasn't found.")
+                    return@put
+                }
+
+                val moneyOperationReq = MoneyOperation(
+                    id = UUID.fromString(req.id),
+                    date = dbop.date,
+                    category = req.category,
+                    amount = req.amount,
+                    description = req.description,
+                    currency = req.currency,
+                    isExpense = req.isExpense
+                )
+
+                call.respond(HttpStatusCode.OK, moneyOperationService.update(moneyOperationReq, user))
+            }
         }
         route("/v1/data/money-operation/all/{userToken}") {
             get {

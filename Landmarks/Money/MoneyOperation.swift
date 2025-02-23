@@ -7,14 +7,14 @@
 
 import Foundation
 
-struct MoneyOperation: Identifiable, Codable {
+struct MoneyOperation: Identifiable, Codable, Hashable {
 	let id: UUID
-	let date: Date
-	let category: Category
-	let amount: Double
-	let description: String
-	let currency: Currency
-	let isExpense: Bool
+	var date: Date
+	var category: Category
+	var amount: Double
+	var description: String
+	var currency: Currency
+	var isExpense: Bool
 }
 
 struct MoneyOperationInternal: Identifiable, Codable {

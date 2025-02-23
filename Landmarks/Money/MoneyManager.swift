@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import OrderedCollections
 
 class MoneyManager: ObservableObject {
 	var storage: MoneyManagerStorage
@@ -34,6 +35,36 @@ class MoneyManager: ObservableObject {
 		let income = MoneyOperation(id: UUID(), date: date, category: category, amount: amount, description: description, currency: currency, isExpense: false)
 		addIncomeInternal(op: income)
 		sendMoneyOperation(operation: income, isExpense: false)
+	}
+	
+	func updateOp(operation: MoneyOperation) {
+		if operation.isExpense {
+			guard let storedOpIdx = storage.moneyData.expenses.firstIndex(where: { $0.id == operation.id }) else {
+				return
+			}
+			
+			storage.moneyData.expenses[storedOpIdx].amount = operation.amount
+			storage.moneyData.expenses[storedOpIdx].currency = operation.currency
+			storage.moneyData.expenses[storedOpIdx].description = operation.description
+			storage.moneyData.expenses[storedOpIdx].category = operation.category
+			storage.moneyData.expenses[storedOpIdx].date = operation.date
+			
+			sendMoneyOperation(operation: storage.moneyData.expenses[storedOpIdx], isExpense: true, update: true)
+		} else {
+			guard let storedOpIdx = storage.moneyData.incomes.firstIndex(where: { $0.id == operation.id }) else {
+				return
+			}
+			
+			storage.moneyData.incomes[storedOpIdx].amount = operation.amount
+			storage.moneyData.incomes[storedOpIdx].currency = operation.currency
+			storage.moneyData.incomes[storedOpIdx].description = operation.description
+			storage.moneyData.incomes[storedOpIdx].category = operation.category
+			storage.moneyData.incomes[storedOpIdx].date = operation.date
+			
+			sendMoneyOperation(operation: storage.moneyData.incomes[storedOpIdx], isExpense: false, update: true)
+		}
+		
+		objectWillChange.send()
 	}
 	
 	private func addExpenseInternal(op: MoneyOperation) {
@@ -92,22 +123,29 @@ class MoneyManager: ObservableObject {
 		return storage.moneyData.balance
 	}
 	
-	func getOperationsByCategory(category: Category, isExpense: Bool = true) -> [MoneyOperation] {
-		if (isExpense) {
-			return storage.moneyData.expenses.filter {$0.category == category}
-		}
-		return storage.moneyData.incomes.filter {$0.category == category}
+	func getOperationsByCategory(category: Category, isExpense: Bool = true, month: Int, year: Int) -> [MoneyOperation] {
+		let calendar = Calendar.current
+		let operations = isExpense ? storage.moneyData.expenses : storage.moneyData.incomes
+		return operations.filter { $0.category == category && calendar.component(.month, from: $0.date) == month && calendar.component(.year, from: $0.date) == year }
 	}
 	
-	func getOperationsSumByCategory(isExpense: Bool = true) -> [Category: Double] {
-		if (isExpense) {
-			return storage.moneyData.expenses.reduce(into: [Category: Double]()) { result, operation in
+	func getOperationsSumByCategory(isExpense: Bool = true, month: Int, year: Int) -> OrderedDictionary<Category, Double> {
+		let calendar = Calendar.current
+
+		let operations = isExpense ? storage.moneyData.expenses : storage.moneyData.incomes
+
+		let categorySums = operations.reduce(into: [Category: Double]()) { result, operation in
+			let operationDate = operation.date
+			let operationMonth = calendar.component(.month, from: operationDate)
+			let operationYear = calendar.component(.year, from: operationDate)
+
+			if operationMonth == month && operationYear == year {
 				result[operation.category, default: 0] += storage.convert(amount: operation.amount, currency: operation.currency)
 			}
 		}
-		return storage.moneyData.incomes.reduce(into: [Category: Double]()) { result, operation in
-			result[operation.category, default: 0] += storage.convert(amount: operation.amount, currency: operation.currency)
-		}
+
+		// Sort by value in descending order and return as OrderedDictionary
+		return OrderedDictionary(uniqueKeysWithValues: categorySums.sorted { $0.value > $1.value })
 	}
 	
 	func sendOperationsText(text: String, onResult: @escaping(_ data: [MoneyOperation]) -> Void) {
@@ -268,7 +306,7 @@ class MoneyManager: ObservableObject {
 		}.resume()
 	}
 	
-	private func sendMoneyOperation(operation: MoneyOperation, isExpense: Bool) {
+	private func sendMoneyOperation(operation: MoneyOperation, isExpense: Bool, update: Bool = false) {
 		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 		if (tokenData == nil) {
 			print("Can't send money opration, user is not signed in")
@@ -279,7 +317,7 @@ class MoneyManager: ObservableObject {
 		let url = URL(string: "\(URLStorage.getBackendHost())/v1/data/money-operation")!
 		
 		var request = URLRequest(url: url)
-		request.httpMethod = "POST"
+		request.httpMethod = update ? "PUT" : "POST"
 		request.addValue("application/json", forHTTPHeaderField: "Content-Type")
 		request.httpBody = try? JSONEncoder().encode([
 			"token": token,

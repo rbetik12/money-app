@@ -27,4 +27,16 @@ class MoneyOperationRepo {
             user = userEntity
         }.let(MoneyOperationEntity::toModel)
     }
+
+    suspend fun update(op: MoneyOperation, userEntity: UserEntity): MoneyOperation = suspendTransaction {
+        MoneyOperationEntity.findById(op.id)?.apply {
+            date = op.date
+            category = op.category
+            amount = op.amount
+            description = op.description
+            currency = op.currency
+            isExpense = op.isExpense
+            user = userEntity
+        }?.let(MoneyOperationEntity::toModel) ?: throw IllegalArgumentException("MoneyOperation with id: '${op.id}' wasn't found.")
+    }
 }

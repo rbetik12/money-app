@@ -30,9 +30,17 @@
 		239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239436C92D1E0AED00B2C616 /* Currency.swift */; };
 		23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDA2D1A26F4002945CB /* ExpenseView.swift */; };
 		23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23985FDC2D1A27FC002945CB /* IncomeView.swift */; };
+		239F888A2D6B46EA0030EC23 /* MoneyOperationListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F88892D6B46E00030EC23 /* MoneyOperationListView.swift */; };
+		239F888D2D6B4AFE0030EC23 /* BitCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 239F888C2D6B4AFE0030EC23 /* BitCollections */; };
+		239F888F2D6B4AFE0030EC23 /* Collections in Frameworks */ = {isa = PBXBuildFile; productRef = 239F888E2D6B4AFE0030EC23 /* Collections */; };
+		239F88912D6B4AFE0030EC23 /* DequeModule in Frameworks */ = {isa = PBXBuildFile; productRef = 239F88902D6B4AFE0030EC23 /* DequeModule */; };
+		239F88932D6B4AFE0030EC23 /* HashTreeCollections in Frameworks */ = {isa = PBXBuildFile; productRef = 239F88922D6B4AFE0030EC23 /* HashTreeCollections */; };
+		239F88952D6B4AFE0030EC23 /* HeapModule in Frameworks */ = {isa = PBXBuildFile; productRef = 239F88942D6B4AFE0030EC23 /* HeapModule */; };
+		239F88972D6B4CF00030EC23 /* MoneyOperationEditView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 239F88962D6B4CE90030EC23 /* MoneyOperationEditView.swift */; };
 		23B23AC72D62757600FE2AF7 /* AddCategoryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */; };
 		23B23AC92D6383EE00FE2AF7 /* VoiceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */; };
 		23B23ACB2D64A2C200FE2AF7 /* MoneyOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */; };
+		23B23AD02D64BF6D00FE2AF7 /* MonthYearPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -59,9 +67,12 @@
 		239436C92D1E0AED00B2C616 /* Currency.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Currency.swift; sourceTree = "<group>"; };
 		23985FDA2D1A26F4002945CB /* ExpenseView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExpenseView.swift; sourceTree = "<group>"; };
 		23985FDC2D1A27FC002945CB /* IncomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IncomeView.swift; sourceTree = "<group>"; };
+		239F88892D6B46E00030EC23 /* MoneyOperationListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperationListView.swift; sourceTree = "<group>"; };
+		239F88962D6B4CE90030EC23 /* MoneyOperationEditView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperationEditView.swift; sourceTree = "<group>"; };
 		23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddCategoryView.swift; sourceTree = "<group>"; };
 		23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRequestView.swift; sourceTree = "<group>"; };
 		23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperationView.swift; sourceTree = "<group>"; };
+		23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthYearPickerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -69,8 +80,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				239F88932D6B4AFE0030EC23 /* HashTreeCollections in Frameworks */,
 				230AE6EC2D3BC8DA005336E0 /* GoogleSignIn in Frameworks */,
 				230AE6EE2D3BC8DA005336E0 /* GoogleSignInSwift in Frameworks */,
+				239F88952D6B4AFE0030EC23 /* HeapModule in Frameworks */,
+				239F88912D6B4AFE0030EC23 /* DequeModule in Frameworks */,
+				239F888F2D6B4AFE0030EC23 /* Collections in Frameworks */,
+				239F888D2D6B4AFE0030EC23 /* BitCollections in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +110,9 @@
 		230AE6F92D3DCB8D005336E0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				239F88962D6B4CE90030EC23 /* MoneyOperationEditView.swift */,
+				239F88892D6B46E00030EC23 /* MoneyOperationListView.swift */,
+				23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */,
 				23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */,
 				23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */,
 				23B23AC62D62756500FE2AF7 /* AddCategoryView.swift */,
@@ -176,6 +195,11 @@
 			packageProductDependencies = (
 				230AE6EB2D3BC8DA005336E0 /* GoogleSignIn */,
 				230AE6ED2D3BC8DA005336E0 /* GoogleSignInSwift */,
+				239F888C2D6B4AFE0030EC23 /* BitCollections */,
+				239F888E2D6B4AFE0030EC23 /* Collections */,
+				239F88902D6B4AFE0030EC23 /* DequeModule */,
+				239F88922D6B4AFE0030EC23 /* HashTreeCollections */,
+				239F88942D6B4AFE0030EC23 /* HeapModule */,
 			);
 			productName = Landmarks;
 			productReference = 2315C2BC2D18B86B002AEFE7 /* Landmarks.app */;
@@ -207,6 +231,7 @@
 			mainGroup = 2315C2B32D18B86B002AEFE7;
 			packageReferences = (
 				230AE6EA2D3BC8DA005336E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */,
+				239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */,
 			);
 			productRefGroup = 2315C2BD2D18B86B002AEFE7 /* Products */;
 			projectDirPath = "";
@@ -239,6 +264,7 @@
 				230AE6F62D3BDBE2005336E0 /* URLStorage.swift in Sources */,
 				23B23ACB2D64A2C200FE2AF7 /* MoneyOperationView.swift in Sources */,
 				2315C2C22D18B86B002AEFE7 /* ContentView.swift in Sources */,
+				239F88972D6B4CF00030EC23 /* MoneyOperationEditView.swift in Sources */,
 				230755FB2D1B714700CBCA07 /* Category.swift in Sources */,
 				237517912D4FB650007908A6 /* SettingsManager.swift in Sources */,
 				230AE6F22D3BDA6F005336E0 /* SignInManager.swift in Sources */,
@@ -252,10 +278,12 @@
 				230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */,
 				23985FDD2D1A27FC002945CB /* IncomeView.swift in Sources */,
 				2315C2C02D18B86B002AEFE7 /* LandmarksApp.swift in Sources */,
+				23B23AD02D64BF6D00FE2AF7 /* MonthYearPickerView.swift in Sources */,
 				23985FDB2D1A26F4002945CB /* ExpenseView.swift in Sources */,
 				2313D8482D29F12100517233 /* StatsView.swift in Sources */,
 				23B23AC72D62757600FE2AF7 /* AddCategoryView.swift in Sources */,
 				237517972D502ECC007908A6 /* SettingsView.swift in Sources */,
+				239F888A2D6B46EA0030EC23 /* MoneyOperationListView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -491,6 +519,14 @@
 				minimumVersion = 8.0.0;
 			};
 		};
+		239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/apple/swift-collections.git";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.1.4;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -503,6 +539,31 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 230AE6EA2D3BC8DA005336E0 /* XCRemoteSwiftPackageReference "GoogleSignIn-iOS" */;
 			productName = GoogleSignInSwift;
+		};
+		239F888C2D6B4AFE0030EC23 /* BitCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = BitCollections;
+		};
+		239F888E2D6B4AFE0030EC23 /* Collections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = Collections;
+		};
+		239F88902D6B4AFE0030EC23 /* DequeModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = DequeModule;
+		};
+		239F88922D6B4AFE0030EC23 /* HashTreeCollections */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HashTreeCollections;
+		};
+		239F88942D6B4AFE0030EC23 /* HeapModule */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 239F888B2D6B4AFE0030EC23 /* XCRemoteSwiftPackageReference "swift-collections" */;
+			productName = HeapModule;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};
