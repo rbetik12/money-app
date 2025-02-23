@@ -24,6 +24,11 @@ struct MoneyOperationsListView: View {
 							Spacer()
 							Text("\(operation.amount, specifier: "%.2f") \(operation.currency.rawValue)")
 								.foregroundColor(operation.isExpense ? .red : .green)
+							Spacer()
+							Image(systemName: "trash")
+								.onTapGesture {
+									moneyManager.deleteOp(operation: operation)
+								}
 						}
 					}
 				}

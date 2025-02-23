@@ -22,11 +22,12 @@ struct CategoryOperation: Identifiable {
 	let color: Color
 }
 
-struct ExpenseRow: View {
+struct OperationView: View {
 	var iconName: String
 	var category: String
 	var transactions: Int
 	var amount: Double
+	var expense: Bool
 	
 	var body: some View {
 		HStack {
@@ -47,7 +48,7 @@ struct ExpenseRow: View {
 					.foregroundColor(.gray)
 			}
 			Spacer()
-			Text(String(format: "-%.1f€", amount))
+			Text(String(format: expense ? "-%.1f€": "%.1f€", amount))
 				.font(.headline)
 				.foregroundColor(.gray)
 		}
@@ -65,6 +66,7 @@ struct StatsView: View {
 	@State private var openedOperationsListView: Bool = false
 	@State private var operationListToShow: [MoneyOperation] = []
 	@State private var selectedCategory: Category = Category()
+	@State private var isExpense: Bool = true
 	
 	var body: some View {
 		NavigationView {
@@ -73,9 +75,12 @@ struct StatsView: View {
 					.onTapGesture {
 						openedDateSelector = true
 					}
+				Spacer()
+				Toggle("Is Expense", isOn: $isExpense)
+					.toggleStyle(SwitchToggleStyle())
 				
-				let operations = moneyManager.getOperationsSumByCategory(isExpense: true, month: selectedMonth, year: selectedYear).map { category, revenue in
-					let total = moneyManager.getOperationsSumByCategory(isExpense: true, month: selectedMonth, year: selectedYear).values.reduce(0, +)
+				let operations = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).map { category, revenue in
+					let total = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).values.reduce(0, +)
 					let percentage = (revenue / total) * 100
 					return CategoryOperation(id: category.id, title: category.name, revenue: revenue, percentage: percentage, color: Color(hex: category.colorHex))
 				} as [CategoryOperation]
@@ -123,17 +128,17 @@ struct StatsView: View {
 				.aspectRatio(1, contentMode: .fit)
 				
 				VStack {
-					Text("Expenses")
+					Text(isExpense ? "Expenses" : "Income")
 					Divider()
 						.background(Color.purple)
 						.frame(height: 2)
 						.padding(.horizontal, 20)
 					
 					List {
-						ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: true, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
-							let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: true, month: selectedMonth, year: selectedYear)
+						ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
+							let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: isExpense, month: selectedMonth, year: selectedYear)
 							
-							ExpenseRow(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue)
+							OperationView(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue, expense: isExpense)
 								.onTapGesture {
 									operationListToShow = opsList
 									selectedCategory = category

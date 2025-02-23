@@ -37,6 +37,18 @@ class MoneyManager: ObservableObject {
 		sendMoneyOperation(operation: income, isExpense: false)
 	}
 	
+	func deleteOp(operation: MoneyOperation) {
+		if operation.isExpense {
+			storage.moneyData.expenses.removeAll { $0.id == operation.id }
+		}
+		else {
+			storage.moneyData.incomes.removeAll { $0.id == operation.id }
+		}
+		
+		objectWillChange.send()
+		sendDeleteOperation(operation: operation)
+	}
+	
 	func updateOp(operation: MoneyOperation) {
 		if operation.isExpense {
 			guard let storedOpIdx = storage.moneyData.expenses.firstIndex(where: { $0.id == operation.id }) else {
@@ -328,6 +340,26 @@ class MoneyManager: ObservableObject {
 			"category": operation.category.name,
 			"isExpense": isExpense ? "true" : "false"
 		])
+		
+		URLSession.shared.dataTask(with: request) { data, response, error in
+			if let error = error {
+				print("Error sending money operation: \(error)")
+				return
+			}
+		}.resume()
+	}
+	
+	private func sendDeleteOperation(operation: MoneyOperation) {
+		let tokenData = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
+		if (tokenData == nil) {
+			print("Can't send money opration, user is not signed in")
+			return
+		}
+		let token = String(data: tokenData!, encoding: .utf8)
+		
+		let url = URL(string: "\(URLStorage.getBackendHost())/v1/data/money-operation/\(operation.id.uuidString)/\(token!)")!
+		var request = URLRequest(url: url)
+		request.httpMethod = "DELETE"
 		
 		URLSession.shared.dataTask(with: request) { data, response, error in
 			if let error = error {

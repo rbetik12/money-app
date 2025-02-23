@@ -119,6 +119,7 @@
 				230AE6FA2D3DCB9B005336E0 /* MainAppView.swift */,
 				237517962D502ECC007908A6 /* SettingsView.swift */,
 				2315C2C12D18B86B002AEFE7 /* ContentView.swift */,
+				2313D8472D29F12100517233 /* StatsView.swift */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -163,7 +164,6 @@
 				23985FDA2D1A26F4002945CB /* ExpenseView.swift */,
 				23985FDC2D1A27FC002945CB /* IncomeView.swift */,
 				230755FA2D1B714700CBCA07 /* Category.swift */,
-				2313D8472D29F12100517233 /* StatsView.swift */,
 			);
 			path = Landmarks;
 			sourceTree = "<group>";

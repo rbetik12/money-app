@@ -39,4 +39,8 @@ class MoneyOperationRepo {
             user = userEntity
         }?.let(MoneyOperationEntity::toModel) ?: throw IllegalArgumentException("MoneyOperation with id: '${op.id}' wasn't found.")
     }
+
+    suspend fun delete(id: UUID) = suspendTransaction {
+        MoneyOperationEntity.findById(id)?.delete()
+    }
 }

@@ -28,4 +28,8 @@ class MoneyOperationService(private val userRepo: UserRepo) {
     suspend fun all(user: User): List<MoneyOperation> {
         return moneyOpRepo.all(user)
     }
+
+    suspend fun delete(id: UUID) {
+        moneyOpRepo.delete(id)
+    }
 }

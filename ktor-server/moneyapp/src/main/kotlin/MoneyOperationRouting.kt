@@ -78,6 +78,24 @@ fun Application.configureMoneyOperationRouting(userRepo: UserRepo, moneyOperatio
                 call.respond(HttpStatusCode.OK, moneyOperationService.update(moneyOperationReq, user))
             }
         }
+        route("/v1/data/money-operation/{id}/{userToken}") {
+            delete {
+                val token = call.parameters["userToken"]
+                if (token == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Token is required.")
+                    return@delete
+                }
+
+                val id = call.parameters["id"]
+                if (id == null) {
+                    call.respond(HttpStatusCode.BadRequest, "Operation id is required.")
+                    return@delete
+                }
+
+                moneyOperationService.delete(UUID.fromString(id))
+                call.respond(HttpStatusCode.OK)
+            }
+        }
         route("/v1/data/money-operation/all/{userToken}") {
             get {
                 val token = call.parameters["userToken"]
