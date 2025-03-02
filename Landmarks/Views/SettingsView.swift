@@ -50,7 +50,7 @@ struct SettingsView: View {
 		NavigationView {
 			List {
 				Section(header: Text("Language")) {
-					Picker("Select Language", selection: $selectedLanguage) {
+					Picker("Speech Language", selection: $selectedLanguage) {
 						ForEach(Array(settingsManager.getSupportedLanguagesList().keys), id: \.self) { code in
 							Text(settingsManager.getSupportedLanguagesList()[code]!).tag(code)
 						}

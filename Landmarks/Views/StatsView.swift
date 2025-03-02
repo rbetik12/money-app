@@ -23,6 +23,8 @@ struct CategoryOperation: Identifiable {
 }
 
 struct OperationView: View {
+	@EnvironmentObject var settingsmanager: SettingsManager
+	
 	var iconName: String
 	var category: String
 	var transactions: Int
@@ -48,7 +50,7 @@ struct OperationView: View {
 					.foregroundColor(.gray)
 			}
 			Spacer()
-			Text(String(format: expense ? "-%.1f€": "%.1f€", amount))
+			Text(String(format: expense ? "-%.1f " + settingsmanager.currency.getSymbol() : "%.1f " + settingsmanager.currency.getSymbol(), amount))
 				.font(.headline)
 				.foregroundColor(.gray)
 		}
