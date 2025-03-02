@@ -17,7 +17,7 @@ struct MainScreenView: View {
 			VStack(alignment: .center) {
 				VStack(alignment: .center) {
 					RoundedRectangle(cornerRadius: 25.0)
-						.fill(Color.red)
+						.fill(moneyManager.getBalance() >= 0 ? Color.green : Color.red)
 						.overlay {
 							VStack {
 								Text("Account Balance")
@@ -25,7 +25,7 @@ struct MainScreenView: View {
 									.foregroundColor(.white)
 									.padding()
 								
-								Text(String(format: "%.1f", moneyManager.getBalance()) + "€")
+								Text(String(format: "%.1f", moneyManager.getBalance()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
@@ -33,20 +33,20 @@ struct MainScreenView: View {
 						.frame(height: 150)
 					
 					RoundedRectangle(cornerRadius: 25.0)
-						.fill(Color.red)
+						.fill(Color.gray)
 						.overlay {
 							VStack {
 								Text("Income")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + "€")
+								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 								
 								Text("Expenses")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "-%.1f", moneyManager.getExpenseAmount()) + "€")
+								Text(String(format: "%.1f", moneyManager.getExpenseAmount()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}

@@ -35,17 +35,17 @@ struct MoneyManagerData: Identifiable, Codable {
 	var id: UUID = UUID(uuid: uuid_t(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 	var expenses: [MoneyOperation] = []
 	var incomes: [MoneyOperation] = []
-	var balance: Double = 0.0
-	var mainCurrency: Currency = .eur
 	var currencyRateUpdateTime: Int = 0
 	var convertionRates = [Currency: Double]()
 }
 
 class MoneyManagerStorage : ObservableObject {
 	@Published var moneyData : MoneyManagerData = MoneyManagerData()
+	var settingsManager: SettingsManager
 	private let zeroUUID: UUID = UUID(uuid: uuid_t(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
 	
-	init() {
+	init(settingsManager: SettingsManager) {
+		self.settingsManager = settingsManager
 		Task {
 			do {
 				try await load()
@@ -57,7 +57,11 @@ class MoneyManagerStorage : ObservableObject {
 	}
 	
 	func convert(amount: Double, currency: Currency) -> Double {
-		return amount / moneyData.convertionRates[currency]!
+		let eurAmount = amount / moneyData.convertionRates[currency]!
+		if settingsManager.currency == .eur {
+			return eurAmount
+		}
+		return eurAmount * moneyData.convertionRates[settingsManager.currency]!
 	}
 	
 	private static func fileURL() throws -> URL {

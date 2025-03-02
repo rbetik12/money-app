@@ -81,15 +81,11 @@ class MoneyManager: ObservableObject {
 	
 	private func addExpenseInternal(op: MoneyOperation) {
 		storage.moneyData.expenses.append(op)
-		storage.moneyData.balance -= storage.convert(amount: op.amount, currency: op.currency)
-		
 		objectWillChange.send()
 	}
 	
 	private func addIncomeInternal(op: MoneyOperation) {
 		storage.moneyData.incomes.append(op)
-		storage.moneyData.balance += storage.convert(amount: op.amount, currency: op.currency)
-		
 		objectWillChange.send()
 	}
 
@@ -132,7 +128,7 @@ class MoneyManager: ObservableObject {
 	}
 	
 	func getBalance() -> Double {
-		return storage.moneyData.balance
+		return getIncomeAmount() - getExpenseAmount()
 	}
 	
 	func getOperationsByCategory(category: Category, isExpense: Bool = true, month: Int, year: Int) -> [MoneyOperation] {

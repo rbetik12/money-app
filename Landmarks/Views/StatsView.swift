@@ -177,7 +177,7 @@ struct StatsView: View {
 #Preview {
 	let settingsManager = SettingsManager()
 	let categoryManager = CategoryManager(settingsManager: settingsManager)
-	let moneyManager = MoneyManager(storage: MoneyManagerStorage(), categoryManager: categoryManager)
+	let moneyManager = MoneyManager(storage: MoneyManagerStorage(settingsManager: settingsManager), categoryManager: categoryManager)
 	
 	StatsView()
 		.environmentObject(settingsManager)

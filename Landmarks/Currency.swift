@@ -13,4 +13,15 @@ enum Currency: String, CaseIterable, Identifiable, Codable {
 	case usd = "USD"
 	
 	var id: Self { self }
+	
+	func getSymbol() -> String {
+		switch self {
+		case .eur:
+			return "€"
+		case .rsd:
+			return "RSD"
+		case .usd:
+			return "$"
+		}
+	}
 }

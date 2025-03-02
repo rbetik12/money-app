@@ -18,7 +18,7 @@ struct LandmarksApp: App {
 	
 	init() {
 		categoryManager = CategoryManager(settingsManager: settingsManager)
-		moneyManager = MoneyManager(storage: MoneyManagerStorage(), categoryManager: categoryManager)
+		moneyManager = MoneyManager(storage: MoneyManagerStorage(settingsManager: settingsManager), categoryManager: categoryManager)
 	}
 	
 	var body: some Scene {

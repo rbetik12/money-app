@@ -9,8 +9,8 @@ import Foundation
 import SwiftUI
 
 class SettingsManager : ObservableObject {
-	@AppStorage("language") private var language: String = "en-US"
-	@AppStorage("currency") private var currency: Currency = .eur
+	@AppStorage("language") var language: String = "en-US"
+	@AppStorage("currency") var currency: Currency = .eur
 	
 	@Published private(set) var categories: [Category] = []
 	@Published private var categoryUUIDToColor: [UUID: String] = [:]
@@ -95,6 +95,8 @@ class SettingsManager : ObservableObject {
 	
 	func setCurrency(currency: Currency) {
 		self.currency = currency
+		
+		objectWillChange.send()
 	}
 	
 	func getCurrency() -> Currency {
