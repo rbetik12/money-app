@@ -11,6 +11,8 @@ struct MainScreenView: View {
 	@State var voiceRecorderOpened = false
 	@State var parsedOperations: [MoneyOperation] = []
 	@State var parsedOperationsOpened = false
+	@State var incomeViewOpened = false
+	@State var expenseViewOpened = false
 	
 	var body: some View {
 		NavigationStack {
@@ -25,7 +27,7 @@ struct MainScreenView: View {
 									.foregroundColor(.white)
 									.padding()
 								
-								Text(String(format: "%.1f", moneyManager.getBalance()) + " \(settingsManager.currency.getSymbol())")
+								Text(String(format: "%.2f", moneyManager.getBalance()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
@@ -39,14 +41,14 @@ struct MainScreenView: View {
 								Text("Income")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "%.1f", moneyManager.getIncomeAmount()) + " \(settingsManager.currency.getSymbol())")
+								Text(String(format: "%.2f", moneyManager.getIncomeAmount()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 								
 								Text("Expenses")
 									.font(.title3)
 									.foregroundColor(.white)
-								Text(String(format: "%.1f", moneyManager.getExpenseAmount()) + " \(settingsManager.currency.getSymbol())")
+								Text(String(format: "%.2f", moneyManager.getExpenseAmount()) + " \(settingsManager.currency.getSymbol())")
 									.font(.largeTitle)
 									.foregroundColor(.white)
 							}
@@ -54,13 +56,13 @@ struct MainScreenView: View {
 				}
 				
 				VStack {
-					NavigationLink(destination: ExpenseView()) {
+					Button(action: { expenseViewOpened.toggle() }) {
 						Text("Add expense")
 					}
 					.buttonStyle(BorderedButtonStyle())
 					.padding()
 					
-					NavigationLink(destination: IncomeView()) {
+					Button(action: { incomeViewOpened.toggle() }) {
 						Text("Add income")
 					}
 					.buttonStyle(BorderedButtonStyle())
@@ -124,6 +126,12 @@ struct MainScreenView: View {
 		}
 		.sheet(isPresented: $parsedOperationsOpened) {
 			MoneyOperationsView(operations: parsedOperations)
+		}
+		.sheet(isPresented: $incomeViewOpened) {
+			IncomeView()
+		}
+		.sheet(isPresented: $expenseViewOpened) {
+			ExpenseView()
 		}
 	}
 }

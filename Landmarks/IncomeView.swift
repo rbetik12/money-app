@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct IncomeView: View {
-	@State private var income: Int = 0
+	@Environment(\.dismiss) private var dismiss
+	@State private var income: Double = 0
 	@State private var incomeText: String = ""
 	@State private var description: String = ""
-	@State private var selectedCurrency: Currency = .rsd
-	@State private var shouldNavigate: Bool = false
+	@State private var selectedCurrency: Currency = .eur
 	@State private var activeCategory: Category? = nil
 	
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var categoryManager: CategoryManager
+	@EnvironmentObject private var settingsManager: SettingsManager
 	
 	var body: some View {
 		NavigationStack {
@@ -50,14 +51,27 @@ struct IncomeView: View {
 					activeCategory = categoryManager.getAll().first
 				}
 				
+				let numberFormatter: NumberFormatter = {
+						let nf = NumberFormatter()
+						nf.locale = Locale.current
+						nf.numberStyle = .decimal
+						nf.maximumFractionDigits = 1
+						return nf
+					}()
+				
 				HStack {
 					TextField("Income", text: $incomeText)
-						.keyboardType(.numberPad)
+						.keyboardType(.decimalPad)
+						.onSubmit {
+							incomeText = String(income)
+						}
 						.onChange(of: incomeText) { newValue in
-							incomeText = newValue.filter { $0.isNumber }
-							income = Int(incomeText) ?? 0
+							incomeText = newValue
+							income = numberFormatter.number(from: newValue)?.doubleValue ?? 0
 						}
 						.padding()
+					
+					selectedCurrency = settingsManager.currency
 					
 					Picker("Select an option", selection: $selectedCurrency) {
 						ForEach(Currency.allCases) { currency in
@@ -69,21 +83,29 @@ struct IncomeView: View {
 				TextField("Description", text: $description)
 					.padding()
 				
+				var isActive: Bool = income > 0 && activeCategory != nil
+				
 				Button("Add") {
 					moneyManager.addIncome(
 						description: description,
-						category: activeCategory ?? categoryManager.getAll().filter{ $0.expense == false }.first!,
+						category: activeCategory!,
 						currency: selectedCurrency,
 						amount: Double(income)
 					)
-					shouldNavigate = true // Trigger navigation after adding expense
+					dismiss()
 				}
-				.navigationDestination(isPresented: $shouldNavigate) {
-					MainScreenView()
-				}
+				.disabled(!isActive)
 				
 				
 				Spacer()
+			}
+			.navigationTitle("Add Income")
+			.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Button("Close") {
+						dismiss()
+					}
+				}
 			}
 		}
 	}

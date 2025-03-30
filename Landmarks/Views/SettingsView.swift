@@ -13,6 +13,8 @@ struct SettingsView: View {
 	@State private var selectedLanguage = "en-US"
 	@State private var selectedCurrency: Currency = .eur
 	@State private var isAddingCategory = false
+	@State private var categoryToDelete: Category?
+	@State private var showDeleteAlert: Bool = false
 	
 	func drawCategoriesList(name: String, expense: Bool) -> some View {
 		let categories = settingsManager.categories.filter {
@@ -29,7 +31,8 @@ struct SettingsView: View {
 						Image(systemName: category.imageName)
 						Text(category.name)
 						Button(action: {
-							settingsManager.removeCategory(category)
+							categoryToDelete = category
+							showDeleteAlert = true
 						}) {
 							Image(systemName: "minus.circle")
 								.foregroundColor(.red)
@@ -38,6 +41,12 @@ struct SettingsView: View {
 				}
 				.onDelete { indexSet in
 					settingsManager.removeCategory(at: indexSet)
+				}
+				.alert("Do you really want to delete category \(categoryToDelete?.name ?? "")", isPresented: $showDeleteAlert) {
+					Button("Yes", role: .destructive) {
+						settingsManager.removeCategory(categoryToDelete!)
+					}
+					Button("No", role: .cancel) {}
 				}
 			}
 			Button("Add Category") {

@@ -8,15 +8,16 @@
 import SwiftUI
 
 struct ExpenseView: View {
+	@Environment(\.dismiss) private var dismiss
 	@State private var expense: Int = 0
 	@State private var expenseText: String = ""
 	@State private var description: String = ""
-	@State private var selectedCurrency: Currency = .rsd
-	@State private var shouldNavigate: Bool = false
+	@State private var selectedCurrency: Currency = .eur
 	@State private var activeCategory: Category? = nil
 	
 	@EnvironmentObject var categoryManager: CategoryManager
 	@EnvironmentObject var moneyManager: MoneyManager
+	@EnvironmentObject private var settingsManager: SettingsManager
 	
 	var body: some View {
 		NavigationStack {
@@ -53,11 +54,16 @@ struct ExpenseView: View {
 				HStack {
 					TextField("Expense", text: $expenseText)
 						.keyboardType(.numberPad)
+						.onSubmit {
+							expenseText = String(expense)
+						}
 						.onChange(of: expenseText) { newValue in
 							expenseText = newValue.filter { $0.isNumber }
 							expense = Int(expenseText) ?? 0
 						}
 						.padding()
+					
+					selectedCurrency = settingsManager.currency
 					
 					Picker("Select an option", selection: $selectedCurrency) {
 						ForEach(Currency.allCases) { currency in
@@ -69,6 +75,8 @@ struct ExpenseView: View {
 				TextField("Description", text: $description)
 					.padding()
 				
+				var isActive = activeCategory != nil && expense > 0
+				
 				Button("Add") {
 					moneyManager.addExpense(
 						description: description,
@@ -76,14 +84,21 @@ struct ExpenseView: View {
 						currency: selectedCurrency,
 						amount: Double(expense)
 					)
-					shouldNavigate = true // Trigger navigation after adding expense
+					dismiss()
+
 				}
-				.navigationDestination(isPresented: $shouldNavigate) {
-					MainScreenView()
-				}
+				.disabled(!isActive)
 				
 				
 				Spacer()
+			}
+			.navigationTitle("Add Expense")
+			.toolbar {
+				ToolbarItem(placement: .navigationBarLeading) {
+					Button("Close") {
+						dismiss()
+					}
+				}
 			}
 		}
 	}

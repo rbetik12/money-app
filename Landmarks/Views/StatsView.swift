@@ -67,111 +67,117 @@ struct StatsView: View {
 	@State private var openedDateSelector: Bool = false
 	@State private var openedOperationsListView: Bool = false
 	@State private var operationListToShow: [MoneyOperation] = []
-	@State private var selectedCategory: Category = Category()
 	@State private var isExpense: Bool = true
+	@State private var selectedCategory: Category = Category()
 	
 	var body: some View {
 		NavigationView {
 			VStack {
-				Text("Month: \(selectedMonth) Year: \(selectedYear)")
-					.onTapGesture {
-						openedDateSelector = true
-					}
-				Spacer()
-				Toggle("Is Expense", isOn: $isExpense)
-					.toggleStyle(SwitchToggleStyle())
-				
-				let operations = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).map { category, revenue in
-					let total = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).values.reduce(0, +)
-					let percentage = (revenue / total) * 100
-					return CategoryOperation(id: category.id, title: category.name, revenue: revenue, percentage: percentage, color: Color(hex: category.colorHex))
-				} as [CategoryOperation]
-				
-				GeometryReader { geometry in
-					let size = min(geometry.size.width, geometry.size.height)
-					let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
-					let totalRevenue = operations.reduce(0) { $0 + $1.revenue }
+				if moneyManager.getAllIncomes().isEmpty && moneyManager.getAllExpenses().isEmpty {
+					Text("No data yet")
+						.foregroundColor(.secondary)
+				}
+				else {
+					Text("Month: \(selectedMonth) Year: \(selectedYear)")
+						.onTapGesture {
+							openedDateSelector = true
+						}
+					Spacer()
+					Toggle("Is Expense", isOn: $isExpense)
+						.toggleStyle(SwitchToggleStyle())
 					
-					Canvas { context, size in
-						var startAngle = Angle(degrees: 0)
+					let operations = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).map { category, revenue in
+						let total = moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear).values.reduce(0, +)
+						let percentage = (revenue / total) * 100
+						return CategoryOperation(id: category.id, title: category.name, revenue: revenue, percentage: percentage, color: Color(hex: category.colorHex))
+					} as [CategoryOperation]
+					
+					GeometryReader { geometry in
+						let size = min(geometry.size.width, geometry.size.height)
+						let center = CGPoint(x: geometry.size.width / 2, y: geometry.size.height / 2)
+						let totalRevenue = operations.reduce(0) { $0 + $1.revenue }
 						
-						for operation in operations {
-							let endAngle = startAngle + Angle(degrees: (operation.revenue / totalRevenue) * 360)
-							let midAngle = (startAngle + endAngle) / 2
+						Canvas { context, size in
+							var startAngle = Angle(degrees: 0)
 							
-							let path = Path { path in
-								path.move(to: center)
-								path.addArc(
-									center: center,
-									radius: size.width / 2,
-									startAngle: startAngle,
-									endAngle: endAngle,
-									clockwise: false
-								)
-							}
-							
-							context.fill(
-								path,
-								with: .color(operation.color)
-							)
-							
-							let textPosition = CGPoint(
-								x: center.x + Foundation.cos(midAngle.radians) * (size.width / 3),
-								y: center.y + Foundation.sin(midAngle.radians) * (size.width / 3)
-							)
-							
-							context.draw(Text(operation.title).font(.caption).foregroundColor(.black), at: textPosition)
-							
-							startAngle = endAngle
-						}
-					}
-					.frame(width: size, height: size)
-				}
-				.aspectRatio(1, contentMode: .fit)
-				
-				VStack {
-					Text(isExpense ? "Expenses" : "Income")
-					Divider()
-						.background(Color.purple)
-						.frame(height: 2)
-						.padding(.horizontal, 20)
-					
-					List {
-						ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
-							let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: isExpense, month: selectedMonth, year: selectedYear)
-							
-							OperationView(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue, expense: isExpense)
-								.onTapGesture {
-									operationListToShow = opsList
-									selectedCategory = category
-									openedOperationsListView = true
+							for operation in operations {
+								let endAngle = startAngle + Angle(degrees: (operation.revenue / totalRevenue) * 360)
+								let midAngle = (startAngle + endAngle) / 2
+								
+								let path = Path { path in
+									path.move(to: center)
+									path.addArc(
+										center: center,
+										radius: size.width / 2,
+										startAngle: startAngle,
+										endAngle: endAngle,
+										clockwise: false
+									)
 								}
+								
+								context.fill(
+									path,
+									with: .color(operation.color)
+								)
+								
+								let textPosition = CGPoint(
+									x: center.x + Foundation.cos(midAngle.radians) * (size.width / 3),
+									y: center.y + Foundation.sin(midAngle.radians) * (size.width / 3)
+								)
+								
+								context.draw(Text(operation.title).font(.caption).foregroundColor(.black), at: textPosition)
+								
+								startAngle = endAngle
+							}
 						}
+						.frame(width: size, height: size)
 					}
-					.listStyle(PlainListStyle())
+					.aspectRatio(1, contentMode: .fit)
+					
+					VStack {
+						Text(isExpense ? "Expenses" : "Income")
+						Divider()
+							.background(Color.purple)
+							.frame(height: 2)
+							.padding(.horizontal, 20)
+						
+						List {
+							ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
+								let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: isExpense, month: selectedMonth, year: selectedYear)
+								
+								OperationView(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue, expense: isExpense)
+									.onTapGesture {
+										operationListToShow = opsList
+										selectedCategory = category
+										openedOperationsListView = true
+									}
+							}
+						}
+						.listStyle(PlainListStyle())
+					}
+					Spacer()
 				}
-				Spacer()
 			}
-		}
-		.sheet(isPresented: $openedDateSelector) {
-			let dateComponents = DateComponents(year: 2020, month: 1, day: 1)
-			let specificDate = Calendar.current.date(from: dateComponents)
-			
-			MonthYearPickerView(minimumDate: specificDate!,
-								maximumDate: Date(),
-								selectedMonth: $selectedMonth,
-								selectedYear: $selectedYear)
-			.onChange(of: selectedMonth) { newValue in
-				self.selectedMonth = newValue
+			.sheet(isPresented: $openedDateSelector) {
+				let dateComponents = DateComponents(year: 2020, month: 1, day: 1)
+				let specificDate = Calendar.current.date(from: dateComponents)
+				
+				MonthYearPickerView(minimumDate: specificDate!,
+									maximumDate: Date(),
+									selectedMonth: $selectedMonth,
+									selectedYear: $selectedYear)
+				.onChange(of: selectedMonth) { newValue in
+					self.selectedMonth = newValue
+				}
+				.onChange(of: selectedYear) { newValue in
+					self.selectedYear = newValue
+				}
+				.padding()
+				.presentationDetents([.height(200)])
 			}
-			.onChange(of: selectedYear) { newValue in
-				self.selectedYear = newValue
+			.sheet(isPresented: $openedOperationsListView) {
+				MoneyOperationsListView(category: $selectedCategory)
 			}
-			.padding()
-			.presentationDetents([.height(200)])
-		}
-		.sheet(isPresented: $openedOperationsListView) {
-			MoneyOperationsListView(category: selectedCategory)
 		}
 	}
 }
