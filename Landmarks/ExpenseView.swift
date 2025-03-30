@@ -63,12 +63,13 @@ struct ExpenseView: View {
 						}
 						.padding()
 					
-					selectedCurrency = settingsManager.currency
-					
 					Picker("Select an option", selection: $selectedCurrency) {
 						ForEach(Currency.allCases) { currency in
 							Text(currency.rawValue).tag(currency)
 						}
+					}
+					.onAppear {
+						selectedCurrency = settingsManager.currency
 					}
 				}
 				
