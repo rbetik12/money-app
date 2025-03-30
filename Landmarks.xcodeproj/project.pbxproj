@@ -41,6 +41,7 @@
 		23B23AC92D6383EE00FE2AF7 /* VoiceRequestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */; };
 		23B23ACB2D64A2C200FE2AF7 /* MoneyOperationView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */; };
 		23B23AD02D64BF6D00FE2AF7 /* MonthYearPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */; };
+		23D24D082D9A01A800C3CC81 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 23D24D072D9A01A400C3CC81 /* ProfileView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -73,6 +74,7 @@
 		23B23AC82D6383DE00FE2AF7 /* VoiceRequestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VoiceRequestView.swift; sourceTree = "<group>"; };
 		23B23ACA2D64A2BD00FE2AF7 /* MoneyOperationView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MoneyOperationView.swift; sourceTree = "<group>"; };
 		23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MonthYearPickerView.swift; sourceTree = "<group>"; };
+		23D24D072D9A01A400C3CC81 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +112,7 @@
 		230AE6F92D3DCB8D005336E0 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				23D24D072D9A01A400C3CC81 /* ProfileView.swift */,
 				239F88962D6B4CE90030EC23 /* MoneyOperationEditView.swift */,
 				239F88892D6B46E00030EC23 /* MoneyOperationListView.swift */,
 				23B23ACF2D64BF6500FE2AF7 /* MonthYearPickerView.swift */,
@@ -273,6 +276,7 @@
 				2313D84B2D2F2F0600517233 /* MoneyManagerStorage.swift in Sources */,
 				230AE6F82D3DBEEB005336E0 /* BundleFix.swift in Sources */,
 				2375178F2D4F9778007908A6 /* SpeechManager.swift in Sources */,
+				23D24D082D9A01A800C3CC81 /* ProfileView.swift in Sources */,
 				238DA1BB2D3F1F3F007BF580 /* Color+Hex.swift in Sources */,
 				239436CA2D1E0AED00B2C616 /* Currency.swift in Sources */,
 				230AE6F42D3BDB60005336E0 /* KeychainManager.swift in Sources */,

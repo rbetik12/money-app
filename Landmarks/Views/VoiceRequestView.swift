@@ -11,6 +11,7 @@ struct VoiceRequestView: View {
 	@Environment(\.dismiss) private var dismiss
 	@EnvironmentObject var settingsManager: SettingsManager
 	@EnvironmentObject var moneyManager: MoneyManager
+	@EnvironmentObject var signInManager: SignInManager
 	@StateObject private var speechRecognizer = SpeechManager()
 	@State private var isRecording = false
 	@State private var animationAmount = 1.0
@@ -25,32 +26,38 @@ struct VoiceRequestView: View {
 	var body: some View {
 		NavigationView {
 			VStack {
-				if (statusMessage.isEmpty) {
-					Image(systemName: "mic.fill")
-						.resizable()
-						.scaledToFit()
-						.frame(width: 50, height: 50)
-						.foregroundColor(isRecording ? .red : .gray)
-						.scaleEffect(isRecording && isPulsating ? 1.2 : 1.0)
-						.animation(isRecording ?
-								   Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true)
-								   : .default, value: isRecording)
-					
-					Button(isRecording ? "Stop Recording" : "Start Recording") {
-						if isRecording {
-							speechRecognizer.stopRecording(onSuccess: {})
-						} else {
-							speechRecognizer.requestPermissions()
-							speechRecognizer.startRecording(locale: settingsManager.getLocale())
+				if (signInManager.isSignedIn()) {
+					if (statusMessage.isEmpty) {
+						Image(systemName: "mic.fill")
+							.resizable()
+							.scaledToFit()
+							.frame(width: 50, height: 50)
+							.foregroundColor(isRecording ? .red : .gray)
+							.scaleEffect(isRecording && isPulsating ? 1.2 : 1.0)
+							.animation(isRecording ?
+									   Animation.easeInOut(duration: 0.8).repeatForever(autoreverses: true)
+									   : .default, value: isRecording)
+						
+						Button(isRecording ? "Stop Recording" : "Start Recording") {
+							if isRecording {
+								speechRecognizer.stopRecording(onSuccess: {})
+							} else {
+								speechRecognizer.requestPermissions()
+								speechRecognizer.startRecording(locale: settingsManager.getLocale())
+							}
+							isRecording.toggle()
 						}
-						isRecording.toggle()
+						.padding()
+						
+						Text(speechRecognizer.transcribedText)
+						
 					}
-					.padding()
-					
-					Text(speechRecognizer.transcribedText)
+					else {
+						Text(statusMessage)
+					}
 				}
 				else {
-					Text(statusMessage)
+					Text("Please sign in at profile section to use this feature!")
 				}
 			}
 			.navigationTitle("Voice Recogniser")

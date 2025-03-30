@@ -47,6 +47,10 @@ class SignInManager : ObservableObject {
 		KeychainManager.instance.delete(forKey: SignInManager.TOKEN_KEYCHAIN_KEY)
 	}
 	
+	func isSignedIn() -> Bool {
+		return !getToken().isEmpty
+	}
+	
 	private func signOutInternal() {
 		let token = getToken()
 		if (token.isEmpty) {
