@@ -11,6 +11,9 @@ import GoogleSignIn
 class SignInManager : ObservableObject {
 	static let TOKEN_KEYCHAIN_KEY = "jwtToken"
 	
+	private var username: String = ""
+	private var email: String = ""
+	
 	func getToken() -> String {
 		if let data = KeychainManager.instance.read(forKey: SignInManager.TOKEN_KEYCHAIN_KEY),
 		   let token = String(data: data, encoding: .utf8) {
@@ -35,7 +38,12 @@ class SignInManager : ObservableObject {
 			}
 			
 			guard let user = user else { return }
-			self.verifyGoogleToken(idToken: user.user.idToken!.tokenString, 
+			
+			if user.user.profile != nil {
+				self.username = user.user.profile!.name
+				self.email = user.user.profile!.email
+			}
+			self.verifyGoogleToken(idToken: user.user.idToken!.tokenString,
 								   refreshToken: user.user.refreshToken.tokenString,
 								   onSuccess: onSuccess)
 		}
@@ -49,6 +57,14 @@ class SignInManager : ObservableObject {
 	
 	func isSignedIn() -> Bool {
 		return !getToken().isEmpty
+	}
+	
+	func getUserName() -> String {
+		return username
+	}
+	
+	func getEmail() -> String {
+		return email
 	}
 	
 	private func signOutInternal() {
