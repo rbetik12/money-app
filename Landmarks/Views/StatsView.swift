@@ -59,6 +59,148 @@ struct OperationView: View {
 	}
 }
 
+struct MonthCalendarView: View {
+	let currentYear: Int
+	let months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
+	@State private var selectedMonth: Int
+	var onMonthSelected: (Int, Int) -> Void // Callback with (month, year)
+	
+	init(currentYear: Int = Calendar.current.component(.year, from: Date()),
+		 currentMonth: Int = Calendar.current.component(.month, from: Date()) - 1, // Convert 1-based to 0-based
+		 onMonthSelected: @escaping (Int, Int) -> Void = { _, _ in }) {
+		self.currentYear = currentYear
+		self.onMonthSelected = onMonthSelected
+		// Initialize the state variable using _selectedMonth because we can't directly set @State in init
+		_selectedMonth = State(initialValue: currentMonth)
+	}
+	
+	var body: some View {
+		VStack(alignment: .center, spacing: 10) {
+			// Title
+			Text("\(currentYear)")
+				.font(.headline)
+				.foregroundColor(.blue)
+			
+			// Horizontally scrollable month selector
+			ScrollViewReader { scrollView in
+				ScrollView(.horizontal, showsIndicators: false) {
+					HStack(spacing: 8) {
+						ForEach(0..<12) { monthIndex in
+							MonthCell(
+								month: months[monthIndex],
+								isSelected: selectedMonth == monthIndex,
+								isCurrentMonth: monthIndex == Calendar.current.component(.month, from: Date()) - 1,
+								action: {
+									selectedMonth = monthIndex
+									onMonthSelected(monthIndex + 1, currentYear)
+								}
+							)
+							.id(monthIndex)
+						}
+					}
+					.padding(.horizontal, 8)
+				}
+				.frame(height: 40)
+				.onAppear {
+					// Scroll to the selected month when view appears
+					scrollView.scrollTo(selectedMonth, anchor: .center)
+				}
+			}
+		}
+		.frame(height: 80)
+		.background(Color.white)
+		.onAppear {
+			// Trigger the callback with the initial selection when the view appears
+			onMonthSelected(selectedMonth + 1, currentYear)
+		}
+	}
+}
+
+struct MonthCell: View {
+	let month: String
+	let isSelected: Bool
+	let isCurrentMonth: Bool
+	let action: () -> Void
+	
+	var body: some View {
+		Text(month)
+			.font(.subheadline)
+			.padding(.horizontal, 12)
+			.padding(.vertical, 6)
+			.background(
+				RoundedRectangle(cornerRadius: 16)
+					.fill(backgroundColor)
+			)
+			.foregroundColor(isSelected ? .white : .primary)
+			.contentShape(Rectangle())
+			.onTapGesture {
+				action()
+			}
+	}
+	
+	private var backgroundColor: Color {
+		if isSelected {
+			return .blue
+		} else if isCurrentMonth {
+			return .blue.opacity(0.1)
+		} else {
+			return Color(.systemGray6)
+		}
+	}
+}
+
+struct YearMonthSelector: View {
+	// Initialize with current year and month
+	@State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
+	@State private var selectedMonthYear: (month: Int, year: Int)? = (
+		month: Calendar.current.component(.month, from: Date()),
+		year: Calendar.current.component(.year, from: Date())
+	)
+	
+	var body: some View {
+		VStack {
+			// Control row with year navigation and selection display
+			HStack {
+				Button(action: { selectedYear -= 1 }) {
+					Image(systemName: "chevron.left")
+						.font(.system(size: 14))
+				}
+				
+				Spacer()
+				
+				if let selected = selectedMonthYear {
+					Text("Selected: \(Calendar.current.monthSymbols[selected.month - 1]) \(selected.year)")
+						.font(.footnote)
+						.foregroundColor(.blue)
+				}
+				
+				Spacer()
+				
+				Button(action: { selectedYear += 1 }) {
+					Image(systemName: "chevron.right")
+						.font(.system(size: 14))
+				}
+			}
+			.padding(.horizontal)
+			
+			// Month selector
+			MonthCalendarView(
+				currentYear: selectedYear,
+				currentMonth: Calendar.current.component(.month, from: Date()) - 1,
+				onMonthSelected: { month, year in
+					selectedMonthYear = (month, year)
+					print("Selected month: \(month), year: \(year)")
+				}
+			)
+			.animation(.easeInOut, value: selectedYear)
+			
+			// Additional content would go here
+			Spacer()
+		}
+		.padding(.top)
+	}
+}
+
 struct StatsView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var categoryManager: CategoryManager
@@ -81,13 +223,61 @@ struct StatsView: View {
 						Text("No data yet")
 							.foregroundColor(.secondary)
 					} else {
-						Text("Month: \(monthName(from: selectedMonth)) Year: \(selectedYear)")
-							.onTapGesture {
-								openedDateSelector = true
+						// Month selector integration
+						VStack {
+							// Control row with year navigation
+							HStack {
+								Button(action: { selectedYear -= 1 }) {
+									Image(systemName: "chevron.left")
+										.font(.system(size: 14))
+								}
+								
+								Spacer()
+								
+								Text(monthName(from: selectedMonth) + " " + String(selectedYear))
+									.font(.headline)
+									.foregroundColor(.blue)
+								
+								Spacer()
+								
+								Button(action: { selectedYear += 1 }) {
+									Image(systemName: "chevron.right")
+										.font(.system(size: 14))
+								}
 							}
+							.padding(.horizontal)
+							
+							// Month selector
+							ScrollViewReader { scrollView in
+								ScrollView(.horizontal, showsIndicators: false) {
+									HStack(spacing: 8) {
+										ForEach(0..<12) { monthIndex in
+											MonthCell(
+												month: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"][monthIndex],
+												isSelected: selectedMonth == monthIndex + 1,
+												isCurrentMonth: monthIndex + 1 == Calendar.current.component(.month, from: Date()),
+												action: {
+													selectedMonth = monthIndex + 1
+													print("Selected month: \(selectedMonth), year: \(selectedYear)")
+												}
+											)
+											.id(monthIndex)
+										}
+									}
+									.padding(.horizontal, 8)
+								}
+								.frame(height: 40)
+								.onAppear {
+									// Scroll to the selected month when view appears
+									scrollView.scrollTo(selectedMonth - 1, anchor: .center)
+								}
+							}
+						}
+						.frame(height: 80)
+						.background(Color.white)
 						
 						Spacer()
-
+						
 						// Carousel for pie charts
 						TabView(selection: $currentPage) {
 							PieChartView(isExpense: true, month: selectedMonth, year: selectedYear)
@@ -111,27 +301,27 @@ struct StatsView: View {
 						// Determine if we're showing Expenses or Income based on the current page
 						let isExpense = currentPage == 0
 
-							ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
-								let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: isExpense, month: selectedMonth, year: selectedYear)
+						ForEach(Array(moneyManager.getOperationsSumByCategory(isExpense: isExpense, month: selectedMonth, year: selectedYear)), id:\.key.id) { category, revenue in
+							let opsList = moneyManager.getOperationsByCategory(category: category, isExpense: isExpense, month: selectedMonth, year: selectedYear)
 
-								OperationView(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue, expense: isExpense)
-									.onTapGesture {
-										operationListToShow = opsList
-										selectedCategory = category
-										openedOperationsListView = true
-									}
-							}
+							OperationView(iconName: category.imageName, category: category.name, transactions: opsList.count, amount: revenue, expense: isExpense)
+								.onTapGesture {
+									operationListToShow = opsList
+									selectedCategory = category
+									openedOperationsListView = true
+								}
+						}
 					}
 				}
 			}
 			.sheet(isPresented: $openedDateSelector) {
 				let dateComponents = DateComponents(year: 2020, month: 1, day: 1)
-				let specificDate = Calendar.current.date(from: dateComponents)
+				let specificDate = Calendar.current.date(from: dateComponents)!
 
-				MonthYearPickerView(minimumDate: specificDate!,
-									maximumDate: Date(),
-									selectedMonth: $selectedMonth,
-									selectedYear: $selectedYear)
+				MonthYearPickerView(minimumDate: specificDate,
+								   maximumDate: Date(),
+								   selectedMonth: $selectedMonth,
+								   selectedYear: $selectedYear)
 				.padding()
 				.presentationDetents([.height(200)])
 			}
