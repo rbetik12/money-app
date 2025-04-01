@@ -3,9 +3,11 @@ import SwiftUI
 struct BalanceCardView: View {
 	@EnvironmentObject var moneyManager: MoneyManager
 	@EnvironmentObject var settingsManager: SettingsManager
+	@State private var selectedMonth: Int = Calendar.current.component(.month, from: Date())
+	@State private var selectedYear: Int = Calendar.current.component(.year, from: Date())
 	
 	var balanceGradient: LinearGradient {
-		let ratio = moneyManager.getIncomeAmount() / max(moneyManager.getExpenseAmount(), 1)
+		let ratio = moneyManager.getIncomeAmount(month: selectedMonth, year: selectedYear) / max(moneyManager.getExpenseAmount(month: selectedMonth, year: selectedYear), 1)
 		let colors: [Color] = ratio >= 1 ? [Color.green.opacity(0.8), Color.green] : [Color.red.opacity(0.8), Color.red]
 		return LinearGradient(gradient: Gradient(colors: colors), startPoint: .topLeading, endPoint: .bottomTrailing)
 	}
@@ -17,7 +19,7 @@ struct BalanceCardView: View {
 				.bold()
 				.foregroundColor(.white)
 			
-			Text("$ \(String(format: "%.2f", moneyManager.getBalance()))")
+			Text("$ \(String(format: "%.2f", moneyManager.getBalance(month: selectedMonth, year: selectedYear)))")
 				.font(.system(size: 40, weight: .bold))
 				.foregroundColor(.white)
 			
@@ -26,7 +28,7 @@ struct BalanceCardView: View {
 					Text("Income")
 						.font(.title3)
 						.foregroundColor(.white)
-					Text("$ \(String(format: "%.2f", moneyManager.getIncomeAmount()))")
+					Text("$ \(String(format: "%.2f", moneyManager.getIncomeAmount(month: selectedMonth, year: selectedYear)))")
 						.font(.title3)
 						.bold()
 						.foregroundColor(.white)
@@ -36,7 +38,7 @@ struct BalanceCardView: View {
 					Text("Expenses")
 						.font(.title3)
 						.foregroundColor(.white)
-					Text("$ \(String(format: "%.2f", moneyManager.getExpenseAmount()))")
+					Text("$ \(String(format: "%.2f", moneyManager.getExpenseAmount(month: selectedMonth, year: selectedYear)))")
 						.font(.title3)
 						.bold()
 						.foregroundColor(.white)

@@ -45,7 +45,7 @@ struct MainAppView: View {
 
 			// Detect background taps to close menu
 			if showOptions {
-				Color.gray.opacity(0.3) // Apply blue background here
+				Color.gray.opacity(0.3)
 					.edgesIgnoringSafeArea(.all)
 					.blur(radius: 10)
 					.onTapGesture {
@@ -65,12 +65,15 @@ struct MainAppView: View {
 							VStack(spacing: 15) {
 								CircleButton(icon: "mic.fill", color: .blue) {
 									voiceRecorderOpened.toggle()
+									showOptions = false
 								}
 								CircleButton(icon: "plus", color: .green) {
 									incomeViewOpened.toggle()
+									showOptions = false
 								}
 								CircleButton(icon: "minus", color: .red) {
 									expenseViewOpened.toggle()
+									showOptions = false
 								}
 							}
 							.transition(.scale)

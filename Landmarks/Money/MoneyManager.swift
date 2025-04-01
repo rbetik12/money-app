@@ -115,20 +115,46 @@ class MoneyManager: ObservableObject {
 		return convertedIncomes
 	}
 	
-	func getIncomeAmount() -> Double {
-		return storage.moneyData.incomes.reduce(0) { (result, item) in
+	func getIncomeAmount(month: Int? = nil, year: Int? = nil) -> Double {
+		let filteredIncomes: [MoneyOperation]
+		
+		if let month = month, let year = year {
+			filteredIncomes = storage.moneyData.incomes.filter { operation in
+				let calendar = Calendar.current
+				let operationMonth = calendar.component(.month, from: operation.date)
+				let operationYear = calendar.component(.year, from: operation.date)
+				return operationMonth == month && operationYear == year
+			}
+		} else {
+			filteredIncomes = storage.moneyData.incomes
+		}
+		
+		return filteredIncomes.reduce(0) { (result, item) in
 			result + storage.convert(amount: item.amount, currency: item.currency)
 		}
 	}
-	
-	func getExpenseAmount() -> Double {
-		return storage.moneyData.expenses.reduce(0) { (result, item) in
+
+	func getExpenseAmount(month: Int? = nil, year: Int? = nil) -> Double {
+		let filteredExpenses: [MoneyOperation]
+		
+		if let month = month, let year = year {
+			filteredExpenses = storage.moneyData.expenses.filter { operation in
+				let calendar = Calendar.current
+				let operationMonth = calendar.component(.month, from: operation.date)
+				let operationYear = calendar.component(.year, from: operation.date)
+				return operationMonth == month && operationYear == year
+			}
+		} else {
+			filteredExpenses = storage.moneyData.expenses
+		}
+		
+		return filteredExpenses.reduce(0) { (result, item) in
 			result + storage.convert(amount: item.amount, currency: item.currency)
 		}
 	}
-	
-	func getBalance() -> Double {
-		return getIncomeAmount() - getExpenseAmount()
+
+	func getBalance(month: Int? = nil, year: Int? = nil) -> Double {
+		return getIncomeAmount(month: month, year: year) - getExpenseAmount(month: month, year: year)
 	}
 	
 	func getOperationsByCategory(category: Category, isExpense: Bool = true, month: Int, year: Int) -> [MoneyOperation] {
